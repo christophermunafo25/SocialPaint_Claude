@@ -14,13 +14,13 @@ import {
   ZoomOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { ComplianceBadge, Chip } from "@/components/ui/Badge";
+import { ComplianceBadge, Chip, Eyebrow } from "@/components/ui/Badge";
 import { DesignPreview } from "./DesignPreview";
 import type { DesignGeneration, GeneratedDesign } from "@/lib/types";
 import { BRAND } from "@/lib/mock-data";
 import { useApp, useCurrentUser } from "@/lib/store";
 import { simulateRefine } from "@/lib/generate";
-import { cn, complianceColor } from "@/lib/cn";
+import { complianceColor } from "@/lib/cn";
 
 const BREAKDOWN_LABELS: { key: keyof GeneratedDesign["complianceBreakdown"]; label: string }[] = [
   { key: "color", label: "Color" },
@@ -71,7 +71,7 @@ export function Detail({
       complianceScore: next.complianceScore,
     });
     pushToast({
-      message: `Refined · score ${design.complianceScore} → ${next.complianceScore}`,
+      message: `Refined · score ${design.complianceScore} → ${next.complianceScore}.`,
       tone: "success",
     });
     setRefining(false);
@@ -108,76 +108,98 @@ export function Detail({
   };
 
   return (
-    <div className="min-h-screen px-8 py-6">
+    <div className="min-h-screen px-10 py-7">
       {/* Top strip */}
-      <div className="max-w-[1280px] mx-auto flex items-center gap-3 mb-6">
+      <div className="max-w-[1320px] mx-auto flex items-center gap-3 mb-6">
         <button
           onClick={() => router.push(`/generate/${generation.id}`)}
-          className="h-9 w-9 rounded-lg inline-flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.04]"
+          className="h-9 w-9 rounded-lg inline-flex items-center justify-center transition-colors"
+          style={{ color: "var(--fg-3)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(247,246,245,0.05)";
+            e.currentTarget.style.color = "var(--fg-1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--fg-3)";
+          }}
           aria-label="Back to results"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16} strokeWidth={1.6} />
         </button>
-        <span className="mono text-white/40">
-          Generate · {generation.id.slice(0, 8)} · Option {design.letter}
-        </span>
+        <Eyebrow>Generate · Option {design.letter}</Eyebrow>
         <div className="ml-auto flex items-center gap-2">
-          <Chip>{generation.designType}</Chip>
+          <Chip tone="mint">{generation.designType}</Chip>
           <Link
             href={`/generate/${generation.id}`}
-            className="text-[12px] text-white/45 hover:text-white px-3 py-1.5 rounded-md border border-white/[0.06] hover:bg-white/[0.04]"
+            className="text-[12.5px] px-3 h-8 inline-flex items-center rounded-lg transition-colors"
+            style={{
+              color: "var(--fg-2)",
+              border: "1px solid var(--hairline)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(247,246,245,0.04)";
+              e.currentTarget.style.color = "var(--fg-1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--fg-2)";
+            }}
           >
             All options
           </Link>
         </div>
       </div>
 
-      {/* Body · 7/3 split */}
-      <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
-        {/* Preview */}
+      {/* Body */}
+      <div className="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
         <div className="surface p-5">
           <div className="relative">
             <DesignPreview
               design={design}
               size="hero"
-              brandLabel={`${BRAND.mark} · ${BRAND.name.toUpperCase()}`}
+              brandLabel={`${BRAND.mark} · ${BRAND.name}`}
               dimensionsLabel="1080 × 1080"
             />
             {refining && (
-              <div className="absolute inset-0 rounded-2xl flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                <div className="flex items-center gap-2.5 text-[13px] text-white/85">
-                  <Loader2 size={16} className="animate-spin text-[#ED7472]" />
+              <div className="absolute inset-0 rounded-[20px] flex items-center justify-center backdrop-blur-sm" style={{ background: "rgba(14,12,14,0.45)" }}>
+                <div className="flex items-center gap-2.5 text-[13.5px]" style={{ color: "var(--fg-1)" }}>
+                  <Loader2 size={16} className="animate-spin" style={{ color: "var(--coral)" }} />
                   Refining…
                 </div>
               </div>
             )}
           </div>
 
-          {/* Zoom controls */}
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-5 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <button className="h-8 w-8 rounded-md hover:bg-white/[0.05] text-white/45 hover:text-white inline-flex items-center justify-center">
-                <ZoomOut size={14} />
+              <button className="h-8 w-8 rounded-lg inline-flex items-center justify-center transition-colors" style={{ color: "var(--fg-3)" }}>
+                <ZoomOut size={14} strokeWidth={1.6} />
               </button>
-              <span className="mono text-white/40">100%</span>
-              <button className="h-8 w-8 rounded-md hover:bg-white/[0.05] text-white/45 hover:text-white inline-flex items-center justify-center">
-                <ZoomIn size={14} />
+              <span className="label">100%</span>
+              <button className="h-8 w-8 rounded-lg inline-flex items-center justify-center transition-colors" style={{ color: "var(--fg-3)" }}>
+                <ZoomIn size={14} strokeWidth={1.6} />
               </button>
             </div>
-            <div className="mono text-white/35">
+            <div className="label">
               {design.exported ? "Exported · ready to ship" : "Draft"}
             </div>
           </div>
         </div>
 
-        {/* Right rail */}
         <div className="flex flex-col gap-4">
           <div className="surface p-5">
-            <div className="mono mb-3">Brand Compliance</div>
+            <Eyebrow className="mb-4">Brand compliance</Eyebrow>
             <div className="flex items-baseline gap-3">
               <div
-                className="text-[48px] font-medium tracking-tight tabular-nums"
-                style={{ color: complianceColor(design.complianceScore).fg }}
+                className="text-[52px] tabular-nums"
+                style={{
+                  color: complianceColor(design.complianceScore).fg,
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 400,
+                  letterSpacing: "-2px",
+                  lineHeight: 1,
+                }}
               >
                 {design.complianceScore}
               </div>
@@ -193,8 +215,8 @@ export function Detail({
                       className="h-1.5 w-1.5 rounded-full"
                       style={{ background: fg }}
                     />
-                    <span className="text-[13px] text-white/65 flex-1">{label}</span>
-                    <span className="tabular-nums text-[13px] text-white/90">{v}</span>
+                    <span className="text-[13px] flex-1" style={{ color: "var(--fg-2)" }}>{label}</span>
+                    <span className="tabular-nums text-[13px]" style={{ color: "var(--fg-1)" }}>{v}</span>
                   </div>
                 );
               })}
@@ -202,10 +224,10 @@ export function Detail({
           </div>
 
           <div className="surface p-5">
-            <div className="mono mb-3">Applied StyleDNA Rules</div>
+            <Eyebrow className="mb-3">Applied StyleDNA rules</Eyebrow>
             <div className="flex flex-wrap gap-2">
               {design.appliedRules.map((r) => (
-                <Chip key={r} tone="neutral">
+                <Chip key={r} tone="orchid">
                   {r}
                 </Chip>
               ))}
@@ -213,7 +235,7 @@ export function Detail({
           </div>
 
           <div className="surface p-5">
-            <div className="mono mb-3">Refine</div>
+            <Eyebrow className="mb-3">Refine</Eyebrow>
             <div className="input-shell p-3.5">
               <textarea
                 value={refinePrompt}
@@ -223,17 +245,18 @@ export function Detail({
                 }}
                 placeholder="Tighten the headline, push more coral…"
                 rows={3}
-                className="bg-transparent w-full outline-none resize-none text-[13.5px] placeholder:text-white/30"
+                className="bg-transparent w-full outline-none resize-none text-[14px]"
+                style={{ color: "var(--fg-1)", fontWeight: 300 }}
               />
               <div className="flex items-center justify-between mt-2">
-                <span className="mono text-white/30">⌘↩ to apply</span>
+                <span className="label-sm">⌘↩ to apply</span>
                 <Button
                   variant="coral"
                   size="sm"
                   onClick={refine}
                   disabled={refining || refinePrompt.trim().length < 3}
                 >
-                  <Sparkles size={12} />
+                  <Sparkles size={12} strokeWidth={1.6} />
                   {refining ? "Refining…" : "Refine"}
                 </Button>
               </div>
@@ -241,13 +264,8 @@ export function Detail({
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="lg"
-              className="flex-1"
-              onClick={handleSave}
-            >
-              <Save size={14} />
+            <Button variant="outline" size="lg" className="flex-1" onClick={handleSave}>
+              <Save size={14} strokeWidth={1.6} />
               {isSaved ? "Saved" : "Save"}
             </Button>
             <div className="relative flex-1">
@@ -257,7 +275,7 @@ export function Detail({
                 className="w-full"
                 onClick={() => setExportOpen((v) => !v)}
               >
-                <Download size={14} />
+                <Download size={14} strokeWidth={1.6} />
                 Export
                 <ChevronDown size={13} className="opacity-60" />
               </Button>
@@ -268,14 +286,26 @@ export function Detail({
                     onClick={() => setExportOpen(false)}
                     aria-hidden
                   />
-                  <div className="absolute right-0 top-full mt-2 z-40 min-w-[160px] rounded-lg bg-[#181818] border border-white/[0.06] shadow-2xl py-1.5">
+                  <div
+                    className="absolute right-0 top-full mt-2 z-40 min-w-[170px] rounded-xl py-1.5"
+                    style={{
+                      background: "var(--card)",
+                      border: "1px solid var(--hairline)",
+                      boxShadow: "var(--shadow-dropdown)",
+                    }}
+                  >
                     {(["PNG", "PDF", "Figma"] as const).map((f) => (
                       <button
                         key={f}
                         onClick={() => handleExport(f)}
-                        className={cn(
-                          "w-full text-left px-3 py-1.5 text-[12.5px] text-white/85 hover:bg-white/[0.05]"
-                        )}
+                        className="w-full text-left px-3.5 py-2 text-[13px] transition-colors"
+                        style={{ color: "var(--fg-1)" }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background = "rgba(247,246,245,0.05)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = "transparent")
+                        }
                       >
                         Export as {f}
                       </button>

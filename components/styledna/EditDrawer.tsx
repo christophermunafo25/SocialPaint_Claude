@@ -63,26 +63,51 @@ export function EditDrawer({ rule, onClose }: Props) {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ duration: 0.28, ease: [0.32, 0.72, 0.32, 1] }}
-            className="fixed top-0 right-0 z-50 h-screen w-[460px] bg-[#141414] border-l border-white/[0.06] flex flex-col"
+            transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
+            className="fixed top-0 right-0 z-50 h-screen w-[480px] flex flex-col"
+            style={{
+              background: "var(--ink-dark)",
+              borderLeft: "1px solid var(--hairline)",
+            }}
           >
-            <header className="flex items-center justify-between px-6 py-5 border-b border-white/[0.04]">
+            <header
+              className="flex items-center justify-between px-6 py-5 border-b"
+              style={{ borderColor: "var(--hairline)" }}
+            >
               <div>
-                <div className="mono text-white/35">{draft.category} · Rule</div>
-                <h2 className="text-[16px] font-medium mt-0.5">Edit rule</h2>
+                <div className="label">{draft.category} · Rule</div>
+                <h2
+                  className="text-[18px] mt-1"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 400,
+                    letterSpacing: "-0.3px",
+                  }}
+                >
+                  Edit rule
+                </h2>
               </div>
               <button
                 onClick={onClose}
-                className="h-8 w-8 rounded-md text-white/45 hover:text-white hover:bg-white/[0.05] inline-flex items-center justify-center"
+                className="h-9 w-9 rounded-lg inline-flex items-center justify-center transition-colors"
+                style={{ color: "var(--fg-3)" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(247,246,245,0.05)";
+                  e.currentTarget.style.color = "var(--fg-1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--fg-3)";
+                }}
                 aria-label="Close drawer"
               >
-                <X size={16} />
+                <X size={16} strokeWidth={1.6} />
               </button>
             </header>
 
             <div className="px-6 py-5 flex-1 overflow-y-auto flex flex-col gap-5">
               <div>
-                <label className="mono mb-2 block">Title</label>
+                <label className="label mb-2 block">Title</label>
                 <input
                   value={draft.title}
                   onChange={(e) => setDraft({ ...draft, title: e.target.value })}
@@ -91,7 +116,7 @@ export function EditDrawer({ rule, onClose }: Props) {
               </div>
 
               <div>
-                <label className="mono mb-2 block">Description</label>
+                <label className="label mb-2 block">Description</label>
                 <textarea
                   value={draft.description}
                   onChange={(e) => setDraft({ ...draft, description: e.target.value })}
@@ -101,7 +126,7 @@ export function EditDrawer({ rule, onClose }: Props) {
               </div>
 
               <div>
-                <label className="mono mb-2 block">Confidence</label>
+                <label className="label mb-2 block">Confidence</label>
                 <div className="flex items-center gap-2">
                   {CONFIDENCES.map((c) => (
                     <button

@@ -13,9 +13,10 @@ export function complianceBand(score: number): "ON-BRAND" | "MOSTLY" | "REVIEW" 
 
 export function complianceColor(score: number) {
   const band = complianceBand(score);
-  if (band === "ON-BRAND") return { fg: "#7CE3B5", bg: "rgba(124, 227, 181, 0.10)" };
-  if (band === "MOSTLY") return { fg: "#F7C57A", bg: "rgba(247, 197, 122, 0.10)" };
-  return { fg: "#ED7472", bg: "rgba(237, 116, 114, 0.10)" };
+  // DS palette · success (mint-ish leaf), sand (warm), danger (coral-deep)
+  if (band === "ON-BRAND") return { fg: "#a9e8b5", bg: "rgba(204, 253, 207, 0.10)" };
+  if (band === "MOSTLY") return { fg: "#f3da8a", bg: "rgba(255, 244, 184, 0.10)" };
+  return { fg: "#f29593", bg: "rgba(237, 116, 114, 0.10)" };
 }
 
 export function relativeTime(iso: string) {

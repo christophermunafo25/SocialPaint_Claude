@@ -3,12 +3,11 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Flag } from "lucide-react";
+import { ChevronRight, Flag, Activity as ActivityIcon } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
-import { ComplianceBadge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
+import { ComplianceBadge, Eyebrow } from "@/components/ui/Badge";
 import { useApp, useCurrentUser, useTeam, useUserById } from "@/lib/store";
-import { cn, relativeTime } from "@/lib/cn";
+import { cn, relativeTime, complianceColor } from "@/lib/cn";
 import type { ActivityEvent, User } from "@/lib/types";
 
 type DateFilter = "24h" | "7d" | "30d" | "all";
@@ -29,7 +28,6 @@ export default function AdminActivityPage() {
 
   useEffect(() => setMounted(true), []);
 
-  // Role-gate · redirect non-admins
   useEffect(() => {
     if (!mounted) return;
     if (user.role !== "Admin" && user.role !== "Owner") {
@@ -66,7 +64,6 @@ export default function AdminActivityPage() {
     });
   }, [activity, memberFilter, typeFilter, scoreFilter, dateFilter]);
 
-  // KPIs · always over the last 24h regardless of filters
   const last24 = useMemo(
     () =>
       activity.filter(
@@ -87,27 +84,56 @@ export default function AdminActivityPage() {
             10
         ) / 10;
   const offBrandFlagged = activity.filter(
-    (a) => a.flaggedByAdmin || (typeof a.complianceScore === "number" && a.complianceScore < 75)
+    (a) =>
+      a.flaggedByAdmin || (typeof a.complianceScore === "number" && a.complianceScore < 75)
   ).length;
 
   if (!mounted) return null;
   if (user.role !== "Admin" && user.role !== "Owner") return null;
 
   return (
-    <div className="px-10 py-8 max-w-[1320px] mx-auto">
-      <div className="mb-6">
-        <div className="mono">§ 4.11 · Observability</div>
-        <h1 className="text-[24px] font-medium tracking-tight mt-1">Admin Activity</h1>
-        <p className="text-[13px] text-white/45 mt-1">
-          Every generation across {team.length} members. Filter, flag, open.
-        </p>
+    <div className="px-10 py-9 max-w-[1340px] mx-auto">
+      <div className="flex items-center gap-2 mb-3">
+        <Eyebrow>Admin · Observability</Eyebrow>
+      </div>
+      <div className="flex items-end justify-between gap-6 mb-7">
+        <div>
+          <h1 className="h1">Activity</h1>
+          <p className="body mt-1.5">
+            Every generation across {team.length} members. Filter, flag, open.
+          </p>
+        </div>
+        <span
+          className="inline-flex items-center gap-2 text-[12px] px-3 h-9 rounded-full"
+          style={{
+            background: "rgba(110,200,135,0.10)",
+            color: "#a9e8b5",
+            border: "1px solid rgba(110,200,135,0.20)",
+          }}
+        >
+          <span className="live-dot" />
+          Live · {activity.length} events
+        </span>
       </div>
 
-      {/* KPI strip */}
+      {/* KPI tiles · pastel feature tile pattern */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <KpiCard label="Designs today" value={designsToday.toString()} />
-        <KpiCard label="Avg compliance" value={avgCompliance ? avgCompliance.toString() : "—"} />
-        <KpiCard label="Off-brand flagged" value={offBrandFlagged.toString()} tone="warn" />
+        <KpiCard
+          label="Designs today"
+          value={designsToday.toString()}
+          pastel="var(--mint)"
+        />
+        <KpiCard
+          label="Avg compliance"
+          value={avgCompliance ? avgCompliance.toString() : "—"}
+          pastel="var(--sand)"
+        />
+        <KpiCard
+          label="Off-brand flagged"
+          value={offBrandFlagged.toString()}
+          pastel="var(--peach)"
+          tone="warn"
+        />
       </div>
 
       {/* Filters */}
@@ -116,7 +142,8 @@ export default function AdminActivityPage() {
           <select
             value={memberFilter}
             onChange={(e) => setMemberFilter(e.target.value)}
-            className="bg-transparent outline-none text-[12.5px] text-white/85 pr-1"
+            className="bg-transparent outline-none text-[12.5px] pr-1"
+            style={{ color: "var(--fg-1)" }}
           >
             <option value="all">All members</option>
             {team.map((m) => (
@@ -130,7 +157,8 @@ export default function AdminActivityPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-transparent outline-none text-[12.5px] text-white/85 pr-1"
+            className="bg-transparent outline-none text-[12.5px] pr-1"
+            style={{ color: "var(--fg-1)" }}
           >
             <option value="all">All types</option>
             {designTypes.map((t) => (
@@ -144,7 +172,8 @@ export default function AdminActivityPage() {
           <select
             value={scoreFilter}
             onChange={(e) => setScoreFilter(e.target.value as ScoreBand)}
-            className="bg-transparent outline-none text-[12.5px] text-white/85 pr-1"
+            className="bg-transparent outline-none text-[12.5px] pr-1"
+            style={{ color: "var(--fg-1)" }}
           >
             <option value="all">All scores</option>
             <option value="ON-BRAND">On-brand (90+)</option>
@@ -156,7 +185,8 @@ export default function AdminActivityPage() {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as DateFilter)}
-            className="bg-transparent outline-none text-[12.5px] text-white/85 pr-1"
+            className="bg-transparent outline-none text-[12.5px] pr-1"
+            style={{ color: "var(--fg-1)" }}
           >
             <option value="24h">Last 24h</option>
             <option value="7d">Last 7d</option>
@@ -164,14 +194,15 @@ export default function AdminActivityPage() {
             <option value="all">All time</option>
           </select>
         </Filter>
-        <span className="ml-auto mono">
-          {filtered.length} events · <span className="live-dot inline-block align-middle" /> live
-        </span>
+        <span className="ml-auto label-sm">{filtered.length} events shown</span>
       </div>
 
       {/* Table */}
       <div className="surface overflow-hidden">
-        <div className="grid grid-cols-[1.4fr_2fr_0.9fr_0.7fr_0.7fr_0.4fr] px-5 py-3 border-b border-white/[0.05] mono text-white/40">
+        <div
+          className="grid grid-cols-[1.4fr_2.2fr_0.9fr_0.9fr_0.7fr_0.4fr] px-5 py-3 border-b label"
+          style={{ borderColor: "var(--hairline)" }}
+        >
           <div>Member</div>
           <div>Prompt / action</div>
           <div>Type</div>
@@ -180,9 +211,7 @@ export default function AdminActivityPage() {
           <div></div>
         </div>
         {filtered.length === 0 && (
-          <div className="px-5 py-14 text-center text-white/45 text-[13px]">
-            No events match these filters.
-          </div>
+          <div className="px-5 py-14 text-center body">No events match these filters.</div>
         )}
         {filtered.map((a) => (
           <ActivityRowWithUser
@@ -193,9 +222,13 @@ export default function AdminActivityPage() {
         ))}
       </div>
 
-      <div className="mt-5 text-[12px] text-white/35">
+      <div className="mt-5 body-sm" style={{ color: "var(--fg-3)" }}>
         Approvals removed in v2 — admins observe, members ship.{" "}
-        <Link href="/settings" className="underline decoration-white/15 hover:decoration-white/55">
+        <Link
+          href="/settings"
+          className="underline transition-opacity"
+          style={{ color: "var(--fg-1)", textDecorationColor: "var(--fg-4)" }}
+        >
           Manage members
         </Link>
         .
@@ -207,20 +240,39 @@ export default function AdminActivityPage() {
 function KpiCard({
   label,
   value,
+  pastel,
   tone = "neutral",
 }: {
   label: string;
   value: string;
+  pastel: string;
   tone?: "neutral" | "warn";
 }) {
   return (
-    <div className="surface p-5">
-      <div className="mono mb-2">{label}</div>
+    <div className="surface p-5 relative overflow-hidden">
+      <div className="flex items-start justify-between">
+        <Eyebrow>{label}</Eyebrow>
+        <span
+          className="icon-tile"
+          style={{
+            width: 28,
+            height: 28,
+            background: pastel,
+            color: "#231f23",
+          }}
+        >
+          <ActivityIcon size={14} strokeWidth={1.6} />
+        </span>
+      </div>
       <div
-        className={cn(
-          "text-[40px] font-medium tracking-tight tabular-nums",
-          tone === "warn" ? "text-[#ED7472]" : "text-white"
-        )}
+        className="mt-3 text-[42px] tabular-nums"
+        style={{
+          color: tone === "warn" ? "#f29593" : "var(--fg-1)",
+          fontFamily: "var(--font-display)",
+          fontWeight: 400,
+          letterSpacing: "-1.5px",
+          lineHeight: 1,
+        }}
       >
         {value}
       </div>
@@ -230,8 +282,14 @@ function KpiCard({
 
 function Filter({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="h-8 px-3 rounded-md bg-white/[0.04] border border-white/[0.04] inline-flex items-center gap-2 hover:bg-white/[0.06] transition-colors">
-      <span className="mono">{label}</span>
+    <div
+      className="h-9 px-3 rounded-lg inline-flex items-center gap-2 transition-colors"
+      style={{
+        background: "rgba(247,246,245,0.04)",
+        border: "1px solid var(--hairline)",
+      }}
+    >
+      <span className="label-sm">{label}</span>
       {children}
     </div>
   );
@@ -269,7 +327,7 @@ function ActivityRow({
   const actionLabel = (() => {
     if (event.type === "asset_ingested") return event.note ?? "Uploaded asset";
     if (event.type === "rule_edited") return event.note ?? "Edited a StyleDNA rule";
-    if (event.type === "export") return event.note ?? `Exported design`;
+    if (event.type === "export") return event.note ?? "Exported design";
     if (event.type === "save") return "Saved to Masterpieces";
     return event.prompt ?? "(no prompt)";
   })();
@@ -277,9 +335,12 @@ function ActivityRow({
   return (
     <div
       className={cn(
-        "grid grid-cols-[1.4fr_2fr_0.9fr_0.7fr_0.7fr_0.4fr] px-5 py-3 items-center border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group",
-        event.flaggedByAdmin && "bg-[rgba(237,116,114,0.04)]"
+        "grid grid-cols-[1.4fr_2.2fr_0.9fr_0.9fr_0.7fr_0.4fr] px-5 py-3 items-center border-b transition-colors group"
       )}
+      style={{
+        borderColor: "var(--hairline)",
+        background: event.flaggedByAdmin ? "rgba(237,116,114,0.04)" : "transparent",
+      }}
     >
       <div className="flex items-center gap-2.5 min-w-0">
         <Avatar
@@ -287,43 +348,55 @@ function ActivityRow({
           color={user?.avatarColor ?? "#888"}
           size={26}
         />
-        <span className="text-[13px] text-white/90 truncate">{user?.name ?? "—"}</span>
+        <span className="text-[13.5px] truncate" style={{ color: "var(--fg-1)" }}>
+          {user?.name ?? "—"}
+        </span>
       </div>
-      <div className="text-[13px] text-white/75 truncate" title={actionLabel}>
+      <div className="text-[13px] truncate" style={{ color: "var(--fg-2)" }} title={actionLabel}>
         {actionLabel}
       </div>
-      <div className="text-[12.5px] text-white/55">
+      <div className="text-[12.5px]" style={{ color: "var(--fg-3)" }}>
         {event.designType ?? eventTypeLabel(event.type)}
       </div>
       <div>
         {typeof event.complianceScore === "number" ? (
           <ComplianceBadge score={event.complianceScore} />
         ) : (
-          <span className="text-white/30">—</span>
+          <span style={{ color: "var(--fg-4)" }}>—</span>
         )}
       </div>
-      <div className="mono text-white/50">{relativeTime(event.createdAt)}</div>
+      <div className="label-sm">{relativeTime(event.createdAt)}</div>
       <div className="flex items-center justify-end gap-1">
         <button
           onClick={onToggleFlag}
           className={cn(
-            "h-7 w-7 rounded-md inline-flex items-center justify-center transition-colors",
-            event.flaggedByAdmin
-              ? "bg-[#ED7472] text-black"
-              : "text-white/30 hover:text-white hover:bg-white/[0.05] opacity-0 group-hover:opacity-100"
+            "h-7 w-7 rounded-lg inline-flex items-center justify-center transition-colors"
           )}
+          style={{
+            background: event.flaggedByAdmin ? "var(--coral)" : "transparent",
+            color: event.flaggedByAdmin ? "#0e0c0e" : "var(--fg-4)",
+          }}
           aria-label={event.flaggedByAdmin ? "Unflag" : "Flag for review"}
-          title={event.flaggedByAdmin ? "Unflag" : "Mark Needs Review"}
+          title={event.flaggedByAdmin ? "Unflag" : "Mark Needs review"}
         >
-          <Flag size={12} />
+          <Flag size={12} strokeWidth={1.6} />
         </button>
         {event.generationId && (
           <button
             onClick={open}
-            className="h-7 w-7 rounded-md inline-flex items-center justify-center text-white/30 hover:text-white hover:bg-white/[0.05]"
+            className="h-7 w-7 rounded-lg inline-flex items-center justify-center transition-colors"
+            style={{ color: "var(--fg-4)" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(247,246,245,0.05)";
+              e.currentTarget.style.color = "var(--fg-1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--fg-4)";
+            }}
             aria-label="Open"
           >
-            <ChevronRight size={14} />
+            <ChevronRight size={14} strokeWidth={1.6} />
           </button>
         )}
       </div>

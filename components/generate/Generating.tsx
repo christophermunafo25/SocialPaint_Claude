@@ -1,18 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BrandHalo } from "@/components/ui/BrandMark";
-import { GENERATING_STATUS_LINES } from "@/lib/mock-data";
+import { HeroHalo } from "@/components/ui/BrandMark";
 import { motion } from "framer-motion";
+
+/**
+ * DS Generating moment — sentence-case rotating status lines, single coral halo,
+ * thin warm progress bar, Fragment Mono meta. No spinners.
+ */
+const STATUS_LINES = [
+  "Reading StyleDNA…",
+  "Applying brand colors…",
+  "Checking type hierarchy…",
+  "Rendering 3 options…",
+];
 
 export function Generating({ totalMs = 3500 }: { totalMs?: number }) {
   const [stage, setStage] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const stageInterval = totalMs / GENERATING_STATUS_LINES.length;
+    const stageInterval = totalMs / STATUS_LINES.length;
     const stageTimers: number[] = [];
-    GENERATING_STATUS_LINES.forEach((_, i) => {
+    STATUS_LINES.forEach((_, i) => {
       stageTimers.push(window.setTimeout(() => setStage(i), i * stageInterval));
     });
 
@@ -33,34 +43,28 @@ export function Generating({ totalMs = 3500 }: { totalMs?: number }) {
   }, [totalMs]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6">
-      <div className="relative mb-10">
-        <div
-          className="absolute -inset-24 -z-10 opacity-70 blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 50%, rgba(237,116,114,0.32), rgba(237,116,114,0) 60%)",
-          }}
-        />
-        <BrandHalo />
-      </div>
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden isolate">
+      <HeroHalo
+        width={920}
+        height={560}
+        style={{ top: "20%", left: "50%", transform: "translateX(-50%)" }}
+      />
 
-      <div className="h-[140px] flex flex-col items-center gap-1.5">
-        {GENERATING_STATUS_LINES.map((line, i) => {
+      <div className="h-[140px] flex flex-col items-center gap-1.5 relative">
+        {STATUS_LINES.map((line, i) => {
           const isActive = i === stage;
           const isPast = i < stage;
           return (
             <motion.div
               key={line}
               initial={false}
-              animate={{
-                opacity: isActive ? 1 : isPast ? 0.22 : 0.35,
-                y: 0,
-              }}
-              transition={{ duration: 0.4 }}
-              className="text-[15px]"
+              animate={{ opacity: isActive ? 1 : isPast ? 0.22 : 0.38, y: 0 }}
+              transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+              className="display-2 text-[26px] sm:text-[32px]"
               style={{
-                color: isActive ? "rgba(255,255,255,0.96)" : "rgba(255,255,255,0.4)",
+                color: isActive ? "var(--fg-1)" : "var(--fg-3)",
+                letterSpacing: "-0.6px",
+                fontWeight: 400,
               }}
             >
               {line}
@@ -69,14 +73,21 @@ export function Generating({ totalMs = 3500 }: { totalMs?: number }) {
         })}
       </div>
 
-      <div className="mt-8 w-[280px] h-[2px] bg-white/[0.06] rounded-full overflow-hidden">
+      <div
+        className="mt-12 w-[320px] h-[2px] rounded-full overflow-hidden relative"
+        style={{ background: "rgba(247,246,245,0.06)" }}
+      >
         <div
-          className="h-full bg-gradient-to-r from-[#ED7472] to-[#F29593] transition-[width] duration-100"
-          style={{ width: `${progress * 100}%` }}
+          className="h-full transition-[width] duration-100"
+          style={{
+            width: `${progress * 100}%`,
+            background:
+              "linear-gradient(90deg, #ed5a2a 0%, #f17a3b 35%, #f5c044 70%, #ed7472 100%)",
+          }}
         />
       </div>
 
-      <div className="mt-4 mono text-white/25">Reading StyleDNA · Acme Cloud</div>
+      <div className="mt-5 label">Reading StyleDNA · Acme Cloud</div>
     </div>
   );
 }

@@ -35,7 +35,7 @@ export const MIRA: User = {
   email: "mira@northfold.co",
   role: "Marketer",
   initials: "MR",
-  avatarColor: "#7CE3B5", // mint
+  avatarColor: "#ccfdcf", // mint
 };
 
 export const TEAM: User[] = [
@@ -46,7 +46,7 @@ export const TEAM: User[] = [
     email: "theo@northfold.co",
     role: "Designer",
     initials: "TP",
-    avatarColor: "#9FB8FF",
+    avatarColor: "#d7e9ff", // sky
   },
   {
     id: "u_sam",
@@ -54,7 +54,7 @@ export const TEAM: User[] = [
     email: "sam@northfold.co",
     role: "Marketer",
     initials: "SH",
-    avatarColor: "#F7C57A",
+    avatarColor: "#fff4b8", // sand
   },
   {
     id: "u_jules",
@@ -62,7 +62,7 @@ export const TEAM: User[] = [
     email: "jules@northfold.co",
     role: "Designer",
     initials: "JA",
-    avatarColor: "#D9A6FF",
+    avatarColor: "#cebffa", // orchid
   },
   {
     id: "u_lin",
@@ -70,7 +70,7 @@ export const TEAM: User[] = [
     email: "lin@northfold.co",
     role: "Marketer",
     initials: "LV",
-    avatarColor: "#B7A1FF",
+    avatarColor: "#ffe1d6", // peach
   },
   {
     id: "u_kai",
@@ -78,7 +78,7 @@ export const TEAM: User[] = [
     email: "kai@northfold.co",
     role: "Sales",
     initials: "KB",
-    avatarColor: "#FFB69E",
+    avatarColor: "#f5cdbe",
   },
   {
     id: "u_ren",
@@ -86,7 +86,7 @@ export const TEAM: User[] = [
     email: "ren@northfold.co",
     role: "Owner",
     initials: "RS",
-    avatarColor: "#EDC972",
+    avatarColor: "#f3da8a",
   },
 ];
 

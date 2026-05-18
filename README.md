@@ -83,17 +83,37 @@ lib/
 
 ## Visual direction
 
-Dark, editorial, calm. One coral moment per screen. Generous whitespace.
-Live signals stay quiet: a single mint pulse, a soft toast, a dimming
-status-line cascade.
+Built on the [SocialPaint Design System](https://github.com/christophermunafo25/SocialPaint_Design_System).
+Dark adaptation throughout: obsidian canvas, paper-cream ink, generous
+whitespace, sentence case everywhere, no emoji.
 
-| Token             | Value                  |
-| ----------------- | ---------------------- |
-| Canvas            | `#0A0A0A`              |
-| Sidebar           | `#121212`              |
-| Card              | `#171717`              |
-| Coral accent      | `#ED7472`              |
-| Mint (live)       | `#7CE3B5`              |
+### Type
+- **Display**: Stack Sans Headline 400 (never bold). Tight tracking.
+- **Body**: Stack Sans 300, 14.5–17 px.
+- **Labels / metadata**: Fragment Mono 10–11 px, uppercase, `0.075em` tracking.
+
+### Color tokens
+| Role              | Token                  | Hex                    |
+| ----------------- | ---------------------- | ---------------------- |
+| Outer canvas      | `--canvas`             | `#0E0C0E`              |
+| Sidebar / dark    | `--ink-dark`           | `#1A171A`              |
+| Card              | `--card`               | `#221E22`              |
+| Surface (hover)   | `--surface`            | `#2A262A`              |
+| Paper / ink (FG)  | `--paper`              | `#F7F6F5`              |
+| Coral accent      | `--coral`              | `#ED7472`              |
+
+### Feature → pastel → icon (DS canonical)
+| Feature        | Pastel                | Icon                |
+| -------------- | --------------------- | ------------------- |
+| StyleDNA       | Orchid `#CEBFFA`      | `Fingerprint`       |
+| Generate       | Mint `#CCFDCF`        | `Wand2`             |
+| Connectors     | Sky `#D7E9FF`         | `Workflow`          |
+| Insights       | Sand `#FFF4B8`        | `BarChart3`         |
+| Templates      | Peach `#FFE1D6`       | `LayoutTemplate`    |
+
+### Radii
+20 px cards · 16 px small cards · 12 px icon tiles · 10 px inputs ·
+8 px buttons · 999 px pills.
 
 ## What this prototype does **not** do
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Eyebrow } from "@/components/ui/Badge";
 import { cn } from "@/lib/cn";
 
 const PLANS = [
@@ -23,7 +24,7 @@ const PLANS = [
       "Up to 5 brands",
       "Live StyleDNA observation",
       "Admin Activity feed",
-      "Connectors · Design / Distribution / Storage",
+      "Connectors · Design, Distribution, Storage",
     ],
     cta: "Current plan",
     accent: true,
@@ -47,44 +48,96 @@ const PLANS = [
 
 export default function PlansPage() {
   return (
-    <div className="px-10 py-8 max-w-[1100px] mx-auto">
-      <div className="mb-6">
-        <div className="mono">§ Plans</div>
-        <h1 className="text-[24px] font-medium tracking-tight mt-1">Plans</h1>
-        <p className="text-[13px] text-white/45 mt-1">
-          Billing flows are mocked in the prototype — the structure shows where this would live.
-        </p>
+    <div className="px-10 py-9 max-w-[1140px] mx-auto">
+      <div className="flex items-center gap-2 mb-3">
+        <Eyebrow>Plans · Pricing</Eyebrow>
+      </div>
+      <div className="flex items-end gap-4 mb-7">
+        <div
+          className="icon-tile"
+          style={{
+            width: 48,
+            height: 48,
+            background: "rgba(247,246,245,0.06)",
+            color: "var(--fg-1)",
+            border: "1px solid var(--hairline)",
+          }}
+        >
+          <CreditCard size={20} strokeWidth={1.5} />
+        </div>
+        <div>
+          <h1 className="h1">Plans</h1>
+          <p className="body mt-1.5">
+            Billing flows are mocked — the structure shows where this would live.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PLANS.map((p) => (
           <div
             key={p.name}
-            className={cn(
-              "surface p-6 relative",
-              p.accent && "border-[rgba(237,116,114,0.30)]"
-            )}
+            className={cn("surface p-6 relative")}
+            style={{
+              borderColor: p.accent ? "rgba(237,116,114,0.30)" : undefined,
+            }}
           >
             {p.current && (
-              <div className="absolute -top-2 left-5 mono px-2 py-0.5 rounded-md bg-[#ED7472] text-black">
+              <div
+                className="absolute -top-2.5 left-5 label px-2.5 py-0.5 rounded-full"
+                style={{
+                  background: "var(--coral)",
+                  color: "#0e0c0e",
+                  letterSpacing: "0.08em",
+                }}
+              >
                 Your plan
               </div>
             )}
-            <div className="text-[15px] text-white/95">{p.name}</div>
-            <div className="mt-4 flex items-baseline gap-1">
-              <span className="text-[32px] font-medium tracking-tight">{p.price}</span>
-              <span className="text-white/45 text-[13px]">{p.cadence}</span>
+            <div className="text-[15px]" style={{ color: "var(--fg-1)", fontWeight: 400 }}>
+              {p.name}
             </div>
-            <p className="mt-2 text-[12.5px] text-white/55 leading-snug">{p.tagline}</p>
-            <ul className="mt-5 space-y-2">
+            <div className="mt-5 flex items-baseline gap-1.5">
+              <span
+                className="text-[36px] tabular-nums"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 400,
+                  letterSpacing: "-1.2px",
+                  color: "var(--fg-1)",
+                  lineHeight: 1,
+                }}
+              >
+                {p.price}
+              </span>
+              <span className="text-[13px]" style={{ color: "var(--fg-3)" }}>
+                {p.cadence}
+              </span>
+            </div>
+            <p
+              className="mt-3 text-[13px] leading-snug"
+              style={{ color: "var(--fg-2)", fontWeight: 300 }}
+            >
+              {p.tagline}
+            </p>
+            <ul className="mt-6 space-y-2.5">
               {p.features.map((f) => (
-                <li key={f} className="text-[13px] text-white/80 flex items-start gap-2">
-                  <Check size={14} className="mt-0.5 text-[#7CE3B5] shrink-0" />
+                <li
+                  key={f}
+                  className="text-[13px] flex items-start gap-2"
+                  style={{ color: "var(--fg-1)", fontWeight: 300 }}
+                >
+                  <Check
+                    size={14}
+                    strokeWidth={1.8}
+                    className="mt-0.5 shrink-0"
+                    style={{ color: "#a9e8b5" }}
+                  />
                   {f}
                 </li>
               ))}
             </ul>
-            <div className="mt-6">
+            <div className="mt-7">
               <Button
                 variant={p.accent ? "coral" : "outline"}
                 size="lg"

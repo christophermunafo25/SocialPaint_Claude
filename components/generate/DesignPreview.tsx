@@ -23,37 +23,64 @@ export function DesignPreview({
     <div
       className={cn(
         "relative w-full overflow-hidden flex flex-col justify-end",
-        isHero ? "aspect-square rounded-2xl p-10" : "aspect-square rounded-xl p-5",
+        isHero ? "aspect-square rounded-[20px] p-12" : "aspect-square rounded-2xl p-5",
         className
       )}
-      style={{ background: design.previewBg }}
+      style={{
+        background: design.previewBg,
+        border: "1px solid rgba(247,246,245,0.06)",
+      }}
     >
       {(brandLabel || dimensionsLabel) && (
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between mono text-white/35">
-          {brandLabel && <span>{brandLabel}</span>}
-          {dimensionsLabel && <span>{dimensionsLabel}</span>}
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+          {brandLabel && (
+            <span
+              className="font-mono uppercase tracking-[0.075em] text-[10px]"
+              style={{ color: "rgba(247,246,245,0.42)" }}
+            >
+              {brandLabel}
+            </span>
+          )}
+          {dimensionsLabel && (
+            <span
+              className="font-mono uppercase tracking-[0.075em] text-[10px]"
+              style={{ color: "rgba(247,246,245,0.42)" }}
+            >
+              {dimensionsLabel}
+            </span>
+          )}
         </div>
       )}
       <div
         className={cn(
           "relative z-10",
-          isHero ? "max-w-[80%]" : "max-w-[88%]"
+          isHero ? "max-w-[80%]" : "max-w-[90%]"
         )}
       >
         <div
           className={cn(
-            "headline-display text-white",
-            isHero ? "text-[40px]" : "text-[19px] leading-[1.08]"
+            isHero ? "text-[44px]" : "text-[20px] leading-[1.08]"
           )}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 400,
+            color: "#f7f6f5",
+            letterSpacing: isHero ? "-1.5px" : "-0.4px",
+            lineHeight: 1.05,
+          }}
         >
           <Highlight text={design.headline} />
         </div>
         {design.subhead && (
           <div
             className={cn(
-              "mt-2 text-white/65",
-              isHero ? "text-[15px]" : "text-[12px]"
+              "mt-2",
+              isHero ? "text-[15px]" : "text-[12.5px]"
             )}
+            style={{
+              color: "rgba(247,246,245,0.68)",
+              fontWeight: 300,
+            }}
           >
             {design.subhead}
           </div>

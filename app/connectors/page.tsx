@@ -1,15 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { Workflow, Check, Loader2 } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { Button } from "@/components/ui/Button";
-import { Check, Loader2 } from "lucide-react";
+import { Eyebrow } from "@/components/ui/Badge";
 import type { Connector } from "@/lib/types";
 
 const SECTIONS: { title: string; key: Connector["category"]; tagline: string }[] = [
-  { title: "Design tools", key: "Design", tagline: "Sources of truth — observed during work." },
-  { title: "Distribution", key: "Distribution", tagline: "Push generated work straight to channels." },
-  { title: "Storage", key: "Storage", tagline: "Drop saved Masterpieces into your stack." },
+  {
+    title: "Design tools",
+    key: "Design",
+    tagline: "Sources of truth — observed during work.",
+  },
+  {
+    title: "Distribution",
+    key: "Distribution",
+    tagline: "Push generated work straight to channels.",
+  },
+  {
+    title: "Storage",
+    key: "Storage",
+    tagline: "Drop saved Masterpieces into your stack.",
+  },
 ];
 
 export default function ConnectorsPage() {
@@ -28,23 +41,41 @@ export default function ConnectorsPage() {
   };
 
   return (
-    <div className="px-10 py-8 max-w-[1100px] mx-auto">
-      <div className="mb-6">
-        <div className="mono">§ 4.10 · Connectors</div>
-        <h1 className="text-[24px] font-medium tracking-tight mt-1">Connectors</h1>
-        <p className="text-[13px] text-white/45 mt-1">
-          Bring your existing tools in. SocialPaint observes — it doesn't ask designers to switch.
-        </p>
+    <div className="px-10 py-9 max-w-[1140px] mx-auto">
+      <div className="flex items-center gap-2 mb-3">
+        <Eyebrow>Connectors · Integrations</Eyebrow>
+      </div>
+      <div className="flex items-end gap-4 mb-8">
+        <div
+          className="icon-tile"
+          style={{
+            width: 48,
+            height: 48,
+            background: "var(--sky)",
+            color: "#231f23",
+          }}
+        >
+          <Workflow size={20} strokeWidth={1.5} />
+        </div>
+        <div>
+          <h1 className="h1">Connectors</h1>
+          <p className="body mt-1.5">
+            Bring your existing tools in. SocialPaint observes — it doesn't
+            ask designers to switch.
+          </p>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-7">
+      <div className="flex flex-col gap-8">
         {SECTIONS.map((sec) => {
           const items = connectors.filter((c) => c.category === sec.key);
           return (
             <section key={sec.key}>
-              <div className="mb-3 flex items-baseline justify-between">
-                <div className="mono">{sec.title}</div>
-                <div className="text-[12px] text-white/35">{sec.tagline}</div>
+              <div className="mb-4 flex items-baseline justify-between">
+                <Eyebrow>{sec.title}</Eyebrow>
+                <div className="text-[12.5px]" style={{ color: "var(--fg-3)" }}>
+                  {sec.tagline}
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {items.map((c) => {
@@ -56,31 +87,44 @@ export default function ConnectorsPage() {
                       className="surface p-4 flex items-center gap-3.5"
                     >
                       <div
-                        className="h-9 w-9 rounded-lg inline-flex items-center justify-center text-[13px] font-medium"
+                        className="h-10 w-10 rounded-xl inline-flex items-center justify-center text-[13.5px]"
                         style={{
                           background: c.brandColor + "1A",
                           color: c.brandColor,
                           border: `1px solid ${c.brandColor}33`,
+                          fontFamily: "var(--font-mono)",
+                          fontWeight: 500,
                         }}
                       >
                         {c.letter}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[13.5px] text-white/95">{c.name}</div>
-                        <div className="mono mt-0.5 text-white/40">
+                        <div
+                          className="text-[14px]"
+                          style={{ color: "var(--fg-1)", fontWeight: 400 }}
+                        >
+                          {c.name}
+                        </div>
+                        <div className="label-sm mt-1">
                           {isConnected
-                            ? "CONNECTED · OBSERVING"
+                            ? "Connected · observing"
                             : isPending
-                            ? "CONNECTING…"
-                            : "AVAILABLE"}
+                            ? "Connecting…"
+                            : "Available"}
                         </div>
                       </div>
                       {isConnected ? (
-                        <div className="flex items-center gap-1.5 text-[12px] text-[#7CE3B5] mr-1">
-                          <Check size={13} /> Connected
+                        <div
+                          className="flex items-center gap-1.5 text-[12.5px] mr-1"
+                          style={{ color: "#a9e8b5" }}
+                        >
+                          <Check size={13} strokeWidth={1.6} /> Connected
                         </div>
                       ) : isPending ? (
-                        <div className="flex items-center gap-1.5 text-[12px] text-white/65 mr-1">
+                        <div
+                          className="flex items-center gap-1.5 text-[12.5px] mr-1"
+                          style={{ color: "var(--fg-2)" }}
+                        >
                           <Loader2 size={13} className="animate-spin" /> Connecting
                         </div>
                       ) : (

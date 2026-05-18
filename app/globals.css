@@ -1,133 +1,378 @@
 @import "tailwindcss";
 
-/* ─── Design tokens · §8 UI style guide ────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────────────
+   SocialPaint · Dark adaptation of the official design system.
+   Sources: colors_and_type.css + README.md (dark theme retained throughout).
+   ────────────────────────────────────────────────────────────────────────── */
 
-@theme {
-  --color-canvas: #0a0a0a;
-  --color-sidebar: #121212;
-  --color-card: #171717;
-  --color-input: #1a1a1a;
-  --color-hover: #1c1c1c;
-  --color-line: #1f1f1f;
-  --color-line-strong: #2a2a2a;
-
-  --color-coral: #ed7472;
-  --color-coral-soft: rgba(237, 116, 114, 0.12);
-  --color-coral-text: #f29593;
-
-  --color-mint: #7ce3b5;
-  --color-amber: #f7c57a;
-  --color-violet: #d9a6ff;
-  --color-azure: #9fb8ff;
-
-  --color-ink-100: rgba(255, 255, 255, 0.96);
-  --color-ink-80: rgba(255, 255, 255, 0.78);
-  --color-ink-60: rgba(255, 255, 255, 0.58);
-  --color-ink-45: rgba(255, 255, 255, 0.45);
-  --color-ink-30: rgba(255, 255, 255, 0.30);
-  --color-ink-15: rgba(255, 255, 255, 0.15);
-
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+/* Stack Sans Headline · display */
+@font-face {
+  font-family: "Stack Sans Headline";
+  src: url("/fonts/StackSansHeadline-Variable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans Headline";
+  src: url("/fonts/StackSansHeadline-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans Headline";
+  src: url("/fonts/StackSansHeadline-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans Headline";
+  src: url("/fonts/StackSansHeadline-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* ─── Base layer ──────────────────────────────────────────────────────── */
+/* Stack Sans · body */
+@font-face {
+  font-family: "Stack Sans";
+  src: url("/fonts/StackSansText-Variable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans";
+  src: url("/fonts/StackSansText-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans";
+  src: url("/fonts/StackSansText-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans";
+  src: url("/fonts/StackSansText-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap");
+
+/* ── Tokens · expose via @theme so Tailwind utilities pick them up ───── */
+
+@theme {
+  /* Dark canvas system — built on the DS obsidian + ink, layered for product. */
+  --color-obsidian: #0e0c0e;        /* outermost canvas (deepest) */
+  --color-ink: #1a171a;             /* sidebar / DS obsidian depth */
+  --color-card: #221e22;            /* resting card on dark */
+  --color-surface: #2a262a;         /* secondary surface / hover */
+  --color-input: #1f1c1f;
+  --color-hairline: rgba(247, 246, 245, 0.08);
+  --color-hairline-strong: rgba(247, 246, 245, 0.16);
+
+  /* Foreground opacities on dark — straight from the DS. */
+  --color-paper: #f7f6f5;
+  --color-fg-1: #f7f6f5;
+  --color-fg-2: rgba(247, 246, 245, 0.64);
+  --color-fg-3: rgba(247, 246, 245, 0.48);
+  --color-fg-4: rgba(247, 246, 245, 0.32);
+  --color-fg-5: rgba(247, 246, 245, 0.08);
+
+  /* Pastels · each feature owns one (DS canonical) */
+  --color-orchid: #cebffa;
+  --color-mint: #ccfdcf;
+  --color-sky: #d7e9ff;
+  --color-sand: #fff4b8;
+  --color-peach: #ffe1d6;
+  --color-coral: #ed7472;
+
+  /* Pastel chip backgrounds — readable on dark */
+  --color-orchid-soft: rgba(206, 191, 250, 0.16);
+  --color-mint-soft: rgba(204, 253, 207, 0.16);
+  --color-sky-soft: rgba(215, 233, 255, 0.16);
+  --color-sand-soft: rgba(255, 244, 184, 0.16);
+  --color-peach-soft: rgba(255, 225, 214, 0.16);
+  --color-coral-soft: rgba(237, 116, 114, 0.16);
+
+  /* Warm spectrum · for the signature halo / mesh */
+  --color-solar: #ed5a2a;
+  --color-sunset: #f17a3b;
+  --color-apricot: #f4a34e;
+  --color-amber: #f5c044;
+  --color-coral-warm: #f1797e;
+  --color-blush: #f17588;
+  --color-magenta: #d8527a;
+
+  /* Semantic state */
+  --color-success: #6ec887;
+  --color-danger: #f06478;
+
+  --font-sans: "Stack Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Stack Sans Headline", "Stack Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-card: 20px;
+  --radius-card-sm: 16px;
+  --radius-icon: 12px;
+  --radius-input: 10px;
+  --radius-button: 8px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 4px 80px rgba(0, 0, 0, 0.45);
+  --shadow-dropdown: 0 4px 40px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* ── Plain CSS custom properties (for var() consumers) ───────────────── */
+:root {
+  --canvas: #0e0c0e;
+  --ink-dark: #1a171a;
+  --card: #221e22;
+  --surface: #2a262a;
+  --input: #1f1c1f;
+  --hairline: rgba(247, 246, 245, 0.08);
+  --hairline-strong: rgba(247, 246, 245, 0.16);
+  --paper: #f7f6f5;
+  --fg-1: #f7f6f5;
+  --fg-2: rgba(247, 246, 245, 0.64);
+  --fg-3: rgba(247, 246, 245, 0.48);
+  --fg-4: rgba(247, 246, 245, 0.32);
+  --fg-5: rgba(247, 246, 245, 0.08);
+
+  --orchid: #cebffa;
+  --mint: #ccfdcf;
+  --sky: #d7e9ff;
+  --sand: #fff4b8;
+  --peach: #ffe1d6;
+  --coral: #ed7472;
+
+  --ease-brand: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --dur-fast: 0.2s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.6s;
+
+  /* The signature halo · warm amber → coral → magenta — adapted slightly
+     for the dark canvas so it reads as a single bloom of light, not a wash. */
+  --halo: radial-gradient(
+    55% 50% at 50% 45%,
+    rgba(245, 192, 68, 0.45) 0%,
+    rgba(244, 163, 78, 0.38) 22%,
+    rgba(241, 122, 59, 0.30) 42%,
+    rgba(237, 90, 42, 0.20) 62%,
+    rgba(216, 82, 122, 0.10) 80%,
+    transparent 100%
+  );
+
+  /* Warm mesh — sampled from DS. Used for the brand mark glyph. */
+  --mesh-mark: radial-gradient(80% 75% at 70% 25%, #f5c044 0%, rgba(245, 192, 68, 0) 70%),
+    radial-gradient(70% 70% at 20% 30%, #f17a3b 0%, rgba(241, 122, 59, 0) 70%),
+    radial-gradient(75% 70% at 60% 80%, #ed5a2a 0%, rgba(237, 90, 42, 0) 70%),
+    radial-gradient(60% 55% at 10% 90%, #d8527a 0%, rgba(216, 82, 122, 0) 70%),
+    linear-gradient(155deg, #f5c044 0%, #f17a3b 45%, #ed5a2a 75%, #d8527a 100%);
+}
+
+/* ── Base layer ──────────────────────────────────────────────────────── */
 
 html,
 body {
-  background: var(--color-canvas);
-  color: var(--color-ink-100);
+  background: var(--canvas);
+  color: var(--fg-1);
   font-family: var(--font-sans);
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "ss01", "cv11";
-  letter-spacing: -0.005em;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.003em;
 }
 
 * {
-  border-color: rgba(255, 255, 255, 0.06);
+  border-color: var(--hairline);
 }
 
 ::selection {
-  background: var(--color-coral-soft);
-  color: var(--color-ink-100);
+  background: var(--coral);
+  color: #0e0c0e;
 }
 
-/* ─── Utility components ──────────────────────────────────────────────── */
+/* ── Typography roles ────────────────────────────────────────────────── */
 
-.mono {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-ink-45);
-}
-
-.mono-strong {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-ink-60);
-}
-
-.headline-display {
+.display-1 {
+  font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 1.04;
+  font-size: clamp(40px, 6vw, 80px);
+  letter-spacing: -2px;
+  line-height: 1.02;
+  text-wrap: balance;
 }
+
+.display-2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(32px, 4.6vw, 56px);
+  letter-spacing: -1.2px;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 3vw, 40px);
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.4px;
+  line-height: 1.18;
+}
+
+.h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  line-height: 1.25;
+}
+
+.body-lg {
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  font-weight: 300;
+}
+.body {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  font-weight: 300;
+}
+.body-sm {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fg-2);
+  font-weight: 300;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  font-weight: 400;
+}
+
+.label-sm {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  font-weight: 400;
+}
+
+/* ── Surface utilities ───────────────────────────────────────────────── */
 
 .surface {
-  background: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+}
+
+.surface-sm {
+  background: var(--card);
+  border: 1px solid var(--hairline);
   border-radius: 16px;
 }
 
+.surface-flat {
+  background: rgba(247, 246, 245, 0.02);
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+}
+
+.surface-hover {
+  transition: background var(--dur-fast) var(--ease-brand),
+    border-color var(--dur-fast) var(--ease-brand);
+}
 .surface-hover:hover {
-  background: var(--color-hover);
+  background: var(--surface);
+  border-color: var(--hairline-strong);
 }
 
 .input-shell {
-  background: var(--color-input);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
+  background: var(--input);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
 }
-
 .input-shell:focus-within {
-  border-color: rgba(237, 116, 114, 0.35);
+  border-color: var(--hairline-strong);
 }
 
-.coral-halo {
-  background-image: radial-gradient(
-    circle at 70% 50%,
-    rgba(237, 116, 114, 0.42),
-    rgba(237, 116, 114, 0) 55%
-  );
+/* ── The signature halo (used on Home / Generating) ─────────────────── */
+.halo-bloom {
+  position: absolute;
+  inset: auto;
+  width: 980px;
+  height: 600px;
+  background: var(--halo);
+  filter: blur(36px);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* Scrollbars · soft */
+/* ── Mark glyph (the warm coral→peach cluster) ───────────────────────── */
+.brand-glyph {
+  background: var(--mesh-mark);
+  box-shadow: 0 14px 60px rgba(237, 90, 42, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* ── Pastel icon tile (DS canonical decorative element) ──────────────── */
+.icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-icon);
+}
+
+/* ── Scrollbars ──────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(247, 246, 245, 0.08);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Pulse — used on "Live" indicators */
+/* ── Live indicators ─────────────────────────────────────────────────── */
 @keyframes sp-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(124, 227, 181, 0.55);
+    box-shadow: 0 0 0 0 rgba(110, 200, 135, 0.55);
   }
   70% {
-    box-shadow: 0 0 0 6px rgba(124, 227, 181, 0);
+    box-shadow: 0 0 0 6px rgba(110, 200, 135, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(124, 227, 181, 0);
+    box-shadow: 0 0 0 0 rgba(110, 200, 135, 0);
   }
 }
 
@@ -135,11 +380,34 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--color-mint);
+  background: var(--success);
   animation: sp-pulse 2s infinite;
 }
 
-/* Status line dim cascade */
+/* ── Subtle grain on dark sections (DS pattern) ──────────────────────── */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+/* ── Focus rings ─────────────────────────────────────────────────────── */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible {
+  outline: 1px solid rgba(237, 116, 114, 0.55);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ── Status line fade ────────────────────────────────────────────────── */
 @keyframes sp-fade-in {
   0% {
     opacity: 0;
@@ -152,15 +420,5 @@ body {
 }
 
 .fade-in {
-  animation: sp-fade-in 0.6s ease forwards;
-}
-
-/* Hide focus ring on mouse use, keep for keyboard. */
-:focus:not(:focus-visible) {
-  outline: none;
-}
-:focus-visible {
-  outline: 1px solid rgba(237, 116, 114, 0.55);
-  outline-offset: 2px;
-  border-radius: 8px;
+  animation: sp-fade-in 0.6s var(--ease-brand) forwards;
 }

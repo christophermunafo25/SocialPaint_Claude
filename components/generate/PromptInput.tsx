@@ -42,7 +42,6 @@ export function PromptInput({
     if (autoFocus) taRef.current?.focus();
   }, [autoFocus]);
 
-  // ⌘K to focus
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -59,42 +58,40 @@ export function PromptInput({
   const submit = async () => {
     if (!ready) return;
     const prompt = value.trim();
-    // Pre-create a pending generation id by starting the simulation.
-    // The Generating screen lives at /generate/[id] — we route there after we have an id.
-    const gen = await Promise.resolve().then(() => {
-      const pendingId = "gen_" + Math.random().toString(36).slice(2, 9);
-      const start = simulateGeneration(prompt, designType, user.id);
-      // Pre-populate a pending generation so the route can read state.
-      setGeneration({
-        id: pendingId,
+    const pendingId = "gen_" + Math.random().toString(36).slice(2, 9);
+    setGeneration({
+      id: pendingId,
+      prompt,
+      designType,
+      createdBy: user.id,
+      createdAt: new Date().toISOString(),
+      status: "generating",
+      options: [],
+    });
+    simulateGeneration(prompt, designType, user.id).then((real) => {
+      setGeneration({ ...real, id: pendingId });
+      pushActivity({
+        type: "generation",
+        actorId: user.id,
         prompt,
         designType,
-        createdBy: user.id,
-        createdAt: new Date().toISOString(),
-        status: "generating",
-        options: [],
+        generationId: pendingId,
+        designId: real.options[0]?.id,
+        complianceScore: real.options[0]?.complianceScore,
       });
-      // When real one resolves, swap it in under the same pending id.
-      start.then((real) => {
-        setGeneration({ ...real, id: pendingId });
-        pushActivity({
-          type: "generation",
-          actorId: user.id,
-          prompt,
-          designType,
-          generationId: pendingId,
-          designId: real.options[0]?.id,
-          complianceScore: real.options[0]?.complianceScore,
-        });
-      });
-      return { id: pendingId };
     });
-    router.push(`/generate/${gen.id}`);
+    router.push(`/generate/${pendingId}`);
   };
 
   return (
     <div className="w-full">
-      <div className="input-shell px-4 py-3.5 flex flex-col gap-3 transition-all">
+      <div
+        className="rounded-2xl p-4 flex flex-col gap-3.5 transition-all"
+        style={{
+          background: "var(--card)",
+          border: "1px solid var(--hairline)",
+        }}
+      >
         <textarea
           ref={taRef}
           value={value}
@@ -104,26 +101,55 @@ export function PromptInput({
           }}
           placeholder="Describe what you'd like to create…"
           rows={2}
-          className="bg-transparent outline-none resize-none text-[15px] leading-[1.5] text-white/95 placeholder:text-white/30 w-full"
+          className="bg-transparent outline-none resize-none text-[15.5px] leading-[1.5] w-full"
+          style={{
+            color: "var(--fg-1)",
+            fontWeight: 300,
+          }}
         />
 
         <div className="flex items-center gap-1.5">
           <button
-            className="h-7 w-7 rounded-md text-white/45 hover:text-white hover:bg-white/[0.06] inline-flex items-center justify-center"
+            className="h-8 w-8 rounded-lg inline-flex items-center justify-center transition-colors"
+            style={{ color: "var(--fg-3)" }}
             aria-label="Add"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(247,246,245,0.06)";
+              e.currentTarget.style.color = "var(--fg-1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--fg-3)";
+            }}
           >
-            <Plus size={15} />
+            <Plus size={15} strokeWidth={1.6} />
           </button>
 
-          <button className="h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md text-[12px] text-white/65 hover:text-white hover:bg-white/[0.06]">
-            <Paperclip size={13} />
+          <button
+            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg text-[12.5px] transition-colors"
+            style={{ color: "var(--fg-2)" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(247,246,245,0.06)";
+              e.currentTarget.style.color = "var(--fg-1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--fg-2)";
+            }}
+          >
+            <Paperclip size={13} strokeWidth={1.6} />
             Attach
           </button>
 
           <div className="relative ml-1">
             <button
               onClick={() => setPickerOpen((v) => !v)}
-              className="h-7 px-2.5 inline-flex items-center gap-1.5 rounded-md text-[12px] text-white/80 bg-white/[0.04] border border-white/[0.05] hover:bg-white/[0.07]"
+              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg text-[12.5px] transition-colors"
+              style={{
+                color: "var(--fg-1)",
+                background: "rgba(247,246,245,0.04)",
+                border: "1px solid var(--hairline)",
+              }}
             >
               {designType}
               <ChevronDown size={12} className="opacity-60" />
@@ -135,7 +161,14 @@ export function PromptInput({
                   onClick={() => setPickerOpen(false)}
                   aria-hidden
                 />
-                <div className="absolute bottom-full mb-2 left-0 z-40 min-w-[180px] rounded-lg bg-[#181818] border border-white/[0.06] shadow-2xl py-1.5">
+                <div
+                  className="absolute bottom-full mb-2 left-0 z-40 min-w-[200px] rounded-xl py-1.5"
+                  style={{
+                    background: "var(--card)",
+                    border: "1px solid var(--hairline)",
+                    boxShadow: "var(--shadow-dropdown)",
+                  }}
+                >
                   {DESIGN_TYPES.map((t) => (
                     <button
                       key={t}
@@ -144,9 +177,18 @@ export function PromptInput({
                         setPickerOpen(false);
                       }}
                       className={cn(
-                        "w-full text-left px-3 py-1.5 text-[12.5px] hover:bg-white/[0.05]",
-                        designType === t ? "text-white" : "text-white/65"
+                        "w-full text-left px-3.5 py-2 text-[13px] transition-colors",
+                        designType === t ? "" : ""
                       )}
+                      style={{
+                        color: designType === t ? "var(--fg-1)" : "var(--fg-2)",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "rgba(247,246,245,0.05)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "transparent")
+                      }
                     >
                       {t}
                     </button>
@@ -160,19 +202,21 @@ export function PromptInput({
             onClick={submit}
             disabled={!ready}
             className={cn(
-              "ml-auto h-8 w-8 rounded-full inline-flex items-center justify-center transition-colors",
-              ready
-                ? "bg-white text-black hover:bg-white"
-                : "bg-white/10 text-white/40 cursor-not-allowed"
+              "ml-auto h-9 w-9 rounded-full inline-flex items-center justify-center transition-colors"
             )}
+            style={{
+              background: ready ? "var(--paper)" : "rgba(247,246,245,0.10)",
+              color: ready ? "var(--canvas)" : "var(--fg-4)",
+              cursor: ready ? "pointer" : "not-allowed",
+            }}
             aria-label="Send prompt"
           >
-            <ArrowRight size={14} strokeWidth={2.2} />
+            <ArrowRight size={15} strokeWidth={2} />
           </button>
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-2 text-[11px] text-white/30 font-mono uppercase tracking-[0.06em]">
+      <div className="mt-3 flex items-center justify-center gap-2 label-sm">
         <span>⌘K to focus</span>
         <span>·</span>
         <span>⌘↩ to send</span>

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { LayoutTemplate } from "lucide-react";
 import { TEMPLATES } from "@/lib/mock-data";
-import { Chip } from "@/components/ui/Badge";
+import { Chip, Eyebrow } from "@/components/ui/Badge";
 import { cn } from "@/lib/cn";
 
 const FILTERS = ["All", "LinkedIn", "Instagram", "Email", "Carousel"] as const;
@@ -15,31 +16,51 @@ export default function TemplatesPage() {
     filter === "All" ? TEMPLATES : TEMPLATES.filter((t) => t.category === filter);
 
   return (
-    <div className="px-10 py-8 max-w-[1280px] mx-auto">
-      <div className="mb-6">
-        <div className="mono">§ 4.8 · Templates</div>
-        <h1 className="text-[24px] font-medium tracking-tight mt-1">Brand Templates</h1>
-        <p className="text-[13px] text-white/45 mt-1">
-          Pre-built starting points. Click a tile to drop the prompt into Generate.
-        </p>
+    <div className="px-10 py-9 max-w-[1320px] mx-auto">
+      <div className="flex items-center gap-2 mb-3">
+        <Eyebrow>Brand templates · Pre-built starts</Eyebrow>
+      </div>
+      <div className="flex items-end justify-between gap-6 mb-7">
+        <div className="flex items-start gap-4">
+          <div
+            className="icon-tile"
+            style={{
+              width: 48,
+              height: 48,
+              background: "var(--peach)",
+              color: "#231f23",
+            }}
+          >
+            <LayoutTemplate size={20} strokeWidth={1.5} />
+          </div>
+          <div>
+            <h1 className="h1">Templates</h1>
+            <p className="body mt-1.5">
+              Click a tile to drop the prompt into Generate.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 mb-5">
+      <div className="flex items-center gap-2 mb-6">
         {FILTERS.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={cn(
-              "h-8 px-3.5 rounded-full text-[12.5px] transition-colors",
-              filter === f
-                ? "bg-white text-black"
-                : "text-white/55 hover:text-white bg-white/[0.03] hover:bg-white/[0.06]"
-            )}
+            className="h-9 px-4 rounded-full text-[12.5px] transition-colors"
+            style={{
+              color: filter === f ? "var(--canvas)" : "var(--fg-2)",
+              background:
+                filter === f
+                  ? "var(--paper)"
+                  : "rgba(247,246,245,0.04)",
+              fontWeight: 400,
+            }}
           >
             {f}
           </button>
         ))}
-        <span className="ml-auto mono">{filtered.length} templates</span>
+        <span className="ml-auto label">{filtered.length} templates</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -47,19 +68,41 @@ export default function TemplatesPage() {
           <Link
             key={t.id}
             href={`/generate?prompt=${encodeURIComponent(t.prompt)}&type=${encodeURIComponent(t.designType)}`}
-            className="surface p-4 hover:border-white/15 transition-colors block group"
+            className="surface surface-hover p-4 block group"
           >
             <div
-              className="aspect-square rounded-xl flex items-end p-5 relative overflow-hidden"
-              style={{ background: t.thumbBg }}
+              className="aspect-square rounded-2xl flex items-end p-5 relative overflow-hidden"
+              style={{
+                background: t.thumbBg,
+                border: "1px solid rgba(247,246,245,0.06)",
+              }}
             >
-              <div className="headline-display text-white text-[22px]">{t.thumbAccent}.</div>
+              <div
+                className="text-[24px] text-white"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 400,
+                  letterSpacing: "-0.5px",
+                }}
+              >
+                {t.thumbAccent}.
+              </div>
             </div>
-            <div className="mt-3 flex items-center justify-between">
-              <div className="text-[13.5px] text-white/90">{t.name}</div>
-              <Chip>{t.designType}</Chip>
+            <div className="mt-4 flex items-center justify-between">
+              <div
+                className="text-[14px]"
+                style={{ color: "var(--fg-1)", fontWeight: 400 }}
+              >
+                {t.name}
+              </div>
+              <Chip tone="mint">{t.designType}</Chip>
             </div>
-            <p className="mt-2 text-[12px] text-white/45 line-clamp-2">{t.prompt}</p>
+            <p
+              className="mt-2 text-[12.5px] leading-snug line-clamp-2"
+              style={{ color: "var(--fg-3)", fontWeight: 300 }}
+            >
+              {t.prompt}
+            </p>
           </Link>
         ))}
       </div>
