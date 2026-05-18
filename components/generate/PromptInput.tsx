@@ -32,7 +32,6 @@ export function PromptInput({
   const [value, setValue] = useState(initialPrompt);
   const [designType, setDesignType] = useState<DesignType>(initialDesignType);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [focused, setFocused] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
 
@@ -95,10 +94,8 @@ export function PromptInput({
         className="rounded-2xl overflow-hidden transition-all"
         style={{
           background: "var(--lift)",
-          border: `1px solid ${focused ? "var(--solar)" : "var(--hairline-strong)"}`,
-          boxShadow: focused
-            ? "0 0 0 3px rgba(237,90,42,0.20), var(--shadow-e2)"
-            : "var(--shadow-e2)",
+          border: "1px solid var(--hairline-strong)",
+          boxShadow: "var(--shadow-e2)",
         }}
       >
         {/* Grounding chips · brand + voice + size */}
@@ -136,8 +133,6 @@ export function PromptInput({
           ref={taRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit();
           }}
@@ -148,7 +143,9 @@ export function PromptInput({
             background: "transparent",
             color: "var(--ink)",
             fontWeight: 300,
+            boxShadow: "none",
           }}
+          onFocus={(e) => (e.currentTarget.style.boxShadow = "none")}
         />
 
         <div
