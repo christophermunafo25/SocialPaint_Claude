@@ -58,7 +58,7 @@ export default function PlansPage() {
           style={{
             width: 48,
             height: 48,
-            background: "rgba(247,246,245,0.06)",
+            background: "rgba(35,31,35,0.06)",
             color: "var(--fg-1)",
             border: "1px solid var(--hairline)",
           }}
@@ -86,7 +86,7 @@ export default function PlansPage() {
               <div
                 className="absolute -top-2.5 left-5 label px-2.5 py-0.5 rounded-full"
                 style={{
-                  background: "var(--coral)",
+                  background: "var(--solar)",
                   color: "#0e0c0e",
                   letterSpacing: "0.08em",
                 }}

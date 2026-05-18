@@ -37,7 +37,7 @@ export default function SettingsPage() {
           style={{
             width: 48,
             height: 48,
-            background: "rgba(247,246,245,0.06)",
+            background: "rgba(35,31,35,0.06)",
             color: "var(--fg-1)",
             border: "1px solid var(--hairline)",
           }}
@@ -71,7 +71,7 @@ export default function SettingsPage() {
             {tab === t && (
               <span
                 className="absolute -bottom-px left-0 right-0 h-[2px]"
-                style={{ background: "var(--coral)" }}
+                style={{ background: "var(--solar)" }}
               />
             )}
           </button>
@@ -169,7 +169,7 @@ function MembersTab() {
                   className="text-[12.5px] px-3 py-1.5 rounded-lg transition-colors"
                   style={{ color: "var(--fg-3)" }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(247,246,245,0.05)";
+                    e.currentTarget.style.background = "rgba(35,31,35,0.05)";
                     e.currentTarget.style.color = "var(--fg-1)";
                   }}
                   onMouseLeave={(e) => {
@@ -197,7 +197,7 @@ function RoleDropdown({ role, onChange }: { role: Role; onChange: (r: Role) => v
         onClick={() => setOpen((v) => !v)}
         className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg text-[12.5px] border"
         style={{
-          background: isElevated ? "rgba(237,116,114,0.10)" : "rgba(247,246,245,0.04)",
+          background: isElevated ? "rgba(237,116,114,0.10)" : "rgba(35,31,35,0.04)",
           color: isElevated ? "#f5a7a4" : "var(--fg-1)",
           borderColor: isElevated ? "rgba(237,116,114,0.20)" : "var(--hairline)",
           fontWeight: 400,
@@ -212,7 +212,7 @@ function RoleDropdown({ role, onChange }: { role: Role; onChange: (r: Role) => v
           <div
             className="absolute left-0 top-full mt-2 z-40 min-w-[180px] rounded-xl py-1.5"
             style={{
-              background: "var(--card)",
+              background: "var(--lift)",
               border: "1px solid var(--hairline)",
               boxShadow: "var(--shadow-dropdown)",
             }}
@@ -226,7 +226,7 @@ function RoleDropdown({ role, onChange }: { role: Role; onChange: (r: Role) => v
                 }}
                 className="w-full text-left px-3.5 py-2 text-[13px] flex items-center gap-2"
                 style={{ color: role === r ? "var(--fg-1)" : "var(--fg-2)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(247,246,245,0.05)")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(35,31,35,0.05)")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 <span className="w-3.5 inline-flex items-center justify-center">
@@ -311,8 +311,8 @@ function BrandTab() {
                   background: c,
                   border: active
                     ? "2px solid var(--fg-1)"
-                    : "1px solid rgba(247,246,245,0.10)",
-                  boxShadow: active ? "0 0 0 4px rgba(247,246,245,0.06)" : "none",
+                    : "1px solid rgba(35,31,35,0.16)",
+                  boxShadow: active ? "0 0 0 4px rgba(35,31,35,0.06)" : "none",
                 }}
                 aria-label={c}
               >
@@ -346,7 +346,7 @@ function BrandTab() {
                 style={{
                   background: active
                     ? "rgba(237,116,114,0.06)"
-                    : "rgba(247,246,245,0.02)",
+                    : "var(--paper)",
                   border: active
                     ? "1px solid rgba(237,116,114,0.25)"
                     : "1px solid var(--hairline)",
@@ -380,7 +380,7 @@ function BrandTab() {
               className="text-[13.5px] flex items-start gap-2"
               style={{ color: "var(--fg-2)", fontWeight: 300 }}
             >
-              <span className="mt-1 h-1 w-1 rounded-full shrink-0" style={{ background: "var(--coral)" }} />
+              <span className="mt-1 h-1 w-1 rounded-full shrink-0" style={{ background: "var(--solar)" }} />
               {r}
             </li>
           ))}
@@ -512,7 +512,7 @@ function GenerationTab() {
               key={p.designType}
               className="flex items-center justify-between p-3.5 rounded-xl"
               style={{
-                background: "rgba(247,246,245,0.02)",
+                background: "var(--paper)",
                 border: "1px solid var(--hairline)",
               }}
             >
@@ -690,7 +690,7 @@ function SimpleSelect({
     <div
       className="rounded-lg px-3 h-10 flex items-center"
       style={{
-        background: "var(--input)",
+        background: "var(--paper)",
         border: "1px solid var(--hairline)",
       }}
     >
@@ -726,7 +726,7 @@ function Toggle({
     >
       <span
         className="relative h-5 w-9 rounded-full transition-colors"
-        style={{ background: on ? "var(--coral)" : "rgba(247,246,245,0.10)" }}
+        style={{ background: on ? "var(--solar)" : "rgba(35,31,35,0.16)" }}
       >
         <span
           className="absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all"

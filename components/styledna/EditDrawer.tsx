@@ -54,7 +54,8 @@ export function EditDrawer({ rule, onClose }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-40 bg-black/40"
+            className="fixed inset-0 z-[300]"
+            style={{ background: "rgba(35,31,35,0.30)" }}
             onClick={onClose}
             aria-label="Close"
           />
@@ -64,10 +65,11 @@ export function EditDrawer({ rule, onClose }: Props) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
-            className="fixed top-0 right-0 z-50 h-screen w-[480px] flex flex-col"
+            className="fixed top-0 right-0 z-[400] h-screen w-[480px] flex flex-col"
             style={{
-              background: "var(--ink-dark)",
+              background: "var(--lift)",
               borderLeft: "1px solid var(--hairline)",
+              boxShadow: "var(--shadow-e4)",
             }}
           >
             <header
@@ -80,8 +82,9 @@ export function EditDrawer({ rule, onClose }: Props) {
                   className="text-[18px] mt-1"
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontWeight: 400,
+                    fontWeight: 500,
                     letterSpacing: "-0.3px",
+                    color: "var(--ink)",
                   }}
                 >
                   Edit rule
@@ -90,18 +93,18 @@ export function EditDrawer({ rule, onClose }: Props) {
               <button
                 onClick={onClose}
                 className="h-9 w-9 rounded-lg inline-flex items-center justify-center transition-colors"
-                style={{ color: "var(--fg-3)" }}
+                style={{ color: "var(--fg-2)" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(247,246,245,0.05)";
-                  e.currentTarget.style.color = "var(--fg-1)";
+                  e.currentTarget.style.background = "var(--paper)";
+                  e.currentTarget.style.color = "var(--ink)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "var(--fg-3)";
+                  e.currentTarget.style.color = "var(--fg-2)";
                 }}
                 aria-label="Close drawer"
               >
-                <X size={16} strokeWidth={1.6} />
+                <X size={16} strokeWidth={1.75} />
               </button>
             </header>
 
@@ -111,7 +114,13 @@ export function EditDrawer({ rule, onClose }: Props) {
                 <input
                   value={draft.title}
                   onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                  className="input-shell w-full px-3.5 h-10 text-[14px] bg-[#1A1A1A] outline-none"
+                  className="w-full px-3.5 h-10 text-[14px] outline-none"
+                  style={{
+                    background: "var(--paper)",
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 10,
+                    color: "var(--ink)",
+                  }}
                 />
               </div>
 
@@ -121,7 +130,13 @@ export function EditDrawer({ rule, onClose }: Props) {
                   value={draft.description}
                   onChange={(e) => setDraft({ ...draft, description: e.target.value })}
                   rows={4}
-                  className="input-shell w-full px-3.5 py-3 text-[13.5px] bg-[#1A1A1A] outline-none resize-none"
+                  className="w-full px-3.5 py-3 text-[13.5px] outline-none resize-none"
+                  style={{
+                    background: "var(--paper)",
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 10,
+                    color: "var(--ink)",
+                  }}
                 />
               </div>
 
@@ -132,11 +147,16 @@ export function EditDrawer({ rule, onClose }: Props) {
                     <button
                       key={c}
                       onClick={() => setDraft({ ...draft, confidence: c })}
-                      className={`h-8 px-3 rounded-md text-[12.5px] border transition-colors ${
-                        draft.confidence === c
-                          ? "bg-white text-black border-white"
-                          : "bg-transparent text-white/65 border-white/10 hover:border-white/25"
-                      }`}
+                      className="h-9 px-3.5 rounded-lg text-[12.5px] border transition-colors"
+                      style={{
+                        background:
+                          draft.confidence === c ? "var(--ink)" : "var(--lift)",
+                        color: draft.confidence === c ? "var(--fg-on-dark-1)" : "var(--ink)",
+                        borderColor:
+                          draft.confidence === c
+                            ? "var(--ink)"
+                            : "var(--hairline-strong)",
+                      }}
                     >
                       {c}
                     </button>
@@ -144,16 +164,19 @@ export function EditDrawer({ rule, onClose }: Props) {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-white/[0.04] flex flex-col gap-3">
+              <div
+                className="pt-4 border-t flex flex-col gap-3"
+                style={{ borderColor: "var(--hairline)" }}
+              >
                 <ToggleRow
-                  icon={<Lock size={14} />}
+                  icon={<Lock size={14} strokeWidth={1.75} />}
                   label="Lock this rule"
                   hint="Prevents auto-updates from observation."
                   on={draft.isLocked}
                   onChange={(v) => setDraft({ ...draft, isLocked: v })}
                 />
                 <ToggleRow
-                  icon={<EyeOff size={14} />}
+                  icon={<EyeOff size={14} strokeWidth={1.75} />}
                   label="Disable rule"
                   hint="Stops applying this rule during generation."
                   on={draft.isDisabled}
@@ -162,7 +185,10 @@ export function EditDrawer({ rule, onClose }: Props) {
               </div>
             </div>
 
-            <footer className="px-6 py-4 border-t border-white/[0.04] flex items-center justify-end gap-2">
+            <footer
+              className="px-6 py-4 border-t flex items-center justify-end gap-2"
+              style={{ borderColor: "var(--hairline)" }}
+            >
               <Button variant="ghost" onClick={onClose}>
                 Cancel
               </Button>
@@ -193,28 +219,36 @@ function ToggleRow({
   return (
     <button
       onClick={() => onChange(!on)}
-      className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.04] text-left"
+      className="flex items-center gap-3 p-3 rounded-xl text-left transition-colors"
+      style={{
+        background: "var(--paper)",
+        border: "1px solid var(--hairline)",
+      }}
     >
       <span
-        className={`h-7 w-7 rounded-md inline-flex items-center justify-center ${
-          on ? "bg-[#ED7472] text-black" : "bg-white/[0.06] text-white/55"
-        }`}
+        className="h-7 w-7 rounded-md inline-flex items-center justify-center"
+        style={{
+          background: on ? "var(--solar)" : "rgba(35,31,35,0.06)",
+          color: on ? "white" : "var(--fg-2)",
+        }}
       >
         {icon}
       </span>
       <span className="flex-1 min-w-0">
-        <span className="block text-[13px] text-white/90">{label}</span>
-        <span className="block text-[11.5px] text-white/45">{hint}</span>
+        <span className="block text-[13px]" style={{ color: "var(--ink)" }}>
+          {label}
+        </span>
+        <span className="block text-[11.5px]" style={{ color: "var(--fg-3)" }}>
+          {hint}
+        </span>
       </span>
       <span
-        className={`relative h-5 w-9 rounded-full transition-colors ${
-          on ? "bg-[#ED7472]" : "bg-white/[0.10]"
-        }`}
+        className="relative h-5 w-9 rounded-full transition-colors"
+        style={{ background: on ? "var(--solar)" : "rgba(35,31,35,0.16)" }}
       >
         <span
-          className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${
-            on ? "left-[18px]" : "left-0.5"
-          }`}
+          className="absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all"
+          style={{ left: on ? 18 : 2 }}
         />
       </span>
     </button>

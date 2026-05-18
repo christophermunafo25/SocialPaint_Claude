@@ -12,23 +12,27 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 /**
- * DS button — 8px radius, Stack Sans body weight 400, no scale on press.
- * Primary uses the paper-on-ink inversion (white pill on dark canvas).
+ * DS button — 8px radius, Stack Sans body weight 400.
+ *
+ * - primary: ink dark on light surfaces (the brand's primary CTA pattern)
+ * - inverted: paper on dark sections
+ * - outline: hairline border on transparent
+ * - ghost: subtle hover only
+ * - subtle: paper-warm tint, useful inside cards
+ * - coral: warm solar accent (use sparingly — one per page)
  */
 const variantClass: Record<Variant, string> = {
-  // Paper on dark canvas — the DS calls this the inverted/primary on dark sections.
   primary:
-    "bg-[var(--paper)] text-[var(--canvas)] hover:bg-white disabled:bg-[rgba(247,246,245,0.16)] disabled:text-[rgba(247,246,245,0.32)]",
+    "bg-[var(--ink)] text-[var(--fg-on-dark-1)] hover:bg-[#0e0c0e] disabled:bg-[rgba(35,31,35,0.16)] disabled:text-[rgba(247,246,245,0.5)]",
+  inverted: "bg-[var(--paper)] text-[var(--ink)] hover:bg-white",
   ghost:
-    "bg-transparent text-[var(--fg-2)] hover:text-[var(--fg-1)] hover:bg-[rgba(247,246,245,0.04)]",
+    "bg-transparent text-[var(--fg-2)] hover:text-[var(--ink)] hover:bg-[rgba(35,31,35,0.04)]",
   outline:
-    "bg-transparent text-[var(--fg-1)] border border-[var(--hairline)] hover:border-[var(--hairline-strong)]",
+    "bg-transparent text-[var(--ink)] border border-[var(--hairline-strong)] hover:border-[var(--ink)]",
   subtle:
-    "bg-[rgba(247,246,245,0.06)] text-[var(--fg-1)] hover:bg-[rgba(247,246,245,0.10)] border border-[var(--hairline)]",
+    "bg-[rgba(35,31,35,0.04)] text-[var(--ink)] hover:bg-[rgba(35,31,35,0.08)]",
   coral:
-    "bg-[#ed7472] text-[#0e0c0e] hover:bg-[#f08785] disabled:bg-[rgba(237,116,114,0.30)] disabled:text-[rgba(14,12,14,0.55)]",
-  inverted:
-    "bg-[var(--paper)] text-[var(--canvas)] hover:bg-white",
+    "bg-[var(--solar)] text-white hover:bg-[#d44d22] disabled:bg-[rgba(237,90,42,0.30)] disabled:text-white/60",
 };
 
 const sizeClass: Record<Size, string> = {

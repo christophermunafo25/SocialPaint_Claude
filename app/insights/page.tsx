@@ -40,17 +40,18 @@ const LEADERBOARD = TEAM.slice(0, 5).map((u, i) => ({
 }));
 
 const TOOLTIP_STYLE = {
-  background: "#221e22",
-  border: "1px solid rgba(247,246,245,0.08)",
+  background: "#ffffff",
+  border: "1px solid rgba(35,31,35,0.08)",
   borderRadius: 12,
   fontSize: 12,
-  color: "#f7f6f5",
+  color: "#231f23",
   fontFamily: "var(--font-mono)",
+  boxShadow: "0 4px 40px rgba(35,31,35,0.08)",
 };
 
 export default function InsightsPage() {
   return (
-    <div className="px-10 py-9 max-w-[1340px] mx-auto">
+    <div className="px-8 py-9 max-w-[1340px] mx-auto">
       <div className="flex items-center gap-2 mb-3">
         <Eyebrow>Insights · Workspace activity</Eyebrow>
       </div>
@@ -105,15 +106,15 @@ export default function InsightsPage() {
                     <stop offset="100%" stopColor="#ed5a2a" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(247,246,245,0.04)" vertical={false} />
+                <CartesianGrid stroke="rgba(35,31,35,0.04)" vertical={false} />
                 <XAxis
                   dataKey="day"
-                  tick={{ fill: "rgba(247,246,245,0.48)", fontSize: 11 }}
+                  tick={{ fill: "rgba(35,31,35,0.48)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: "rgba(247,246,245,0.32)", fontSize: 11 }}
+                  tick={{ fill: "rgba(35,31,35,0.32)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -144,21 +145,21 @@ export default function InsightsPage() {
                 data={COMPLIANCE_DISTRIBUTION}
                 margin={{ top: 10, right: 6, bottom: 0, left: -16 }}
               >
-                <CartesianGrid stroke="rgba(247,246,245,0.04)" vertical={false} />
+                <CartesianGrid stroke="rgba(35,31,35,0.04)" vertical={false} />
                 <XAxis
                   dataKey="band"
-                  tick={{ fill: "rgba(247,246,245,0.48)", fontSize: 11 }}
+                  tick={{ fill: "rgba(35,31,35,0.48)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: "rgba(247,246,245,0.32)", fontSize: 11 }}
+                  tick={{ fill: "rgba(35,31,35,0.32)", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <Tooltip
                   contentStyle={TOOLTIP_STYLE}
-                  cursor={{ fill: "rgba(247,246,245,0.04)" }}
+                  cursor={{ fill: "rgba(35,31,35,0.04)" }}
                 />
                 <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                   {COMPLIANCE_DISTRIBUTION.map((d, i) => (
@@ -198,7 +199,7 @@ export default function InsightsPage() {
                 </span>
                 <div
                   className="w-[140px] h-1.5 rounded-full overflow-hidden"
-                  style={{ background: "rgba(247,246,245,0.06)" }}
+                  style={{ background: "rgba(35,31,35,0.06)" }}
                 >
                   <div
                     className="h-full"
@@ -207,7 +208,7 @@ export default function InsightsPage() {
                       background:
                         i === 0
                           ? "linear-gradient(90deg, #ed5a2a, #f17a3b 60%, #f5c044)"
-                          : "rgba(247,246,245,0.48)",
+                          : "rgba(35,31,35,0.48)",
                     }}
                   />
                 </div>
@@ -240,7 +241,7 @@ export default function InsightsPage() {
                     className="h-8 w-8 rounded-lg flex-shrink-0"
                     style={{
                       background: pastel,
-                      border: "1px solid rgba(247,246,245,0.06)",
+                      border: "1px solid rgba(35,31,35,0.06)",
                     }}
                   />
                   <span

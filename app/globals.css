@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────────────────
-   SocialPaint · Dark adaptation of the official design system.
-   Sources: colors_and_type.css + README.md (dark theme retained throughout).
+   SocialPaint · LIGHT theme (DS-native).
+   Source of truth: SocialPaint_Design_System/colors_and_type.css (May 2026).
    ────────────────────────────────────────────────────────────────────────── */
 
 /* Stack Sans Headline · display */
@@ -10,13 +10,6 @@
   font-family: "Stack Sans Headline";
   src: url("/fonts/StackSansHeadline-Variable.woff2") format("woff2-variations");
   font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Stack Sans Headline";
-  src: url("/fonts/StackSansHeadline-Light.woff2") format("woff2");
-  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -31,6 +24,13 @@
   font-family: "Stack Sans Headline";
   src: url("/fonts/StackSansHeadline-Medium.woff2") format("woff2");
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Stack Sans Headline";
+  src: url("/fonts/StackSansHeadline-SemiBold.woff2") format("woff2");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -67,27 +67,18 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap");
 
-/* ── Tokens · expose via @theme so Tailwind utilities pick them up ───── */
+/* ── DS tokens · light theme ──────────────────────────────────────────── */
 
 @theme {
-  /* Dark canvas system — built on the DS obsidian + ink, layered for product. */
-  --color-obsidian: #0e0c0e;        /* outermost canvas (deepest) */
-  --color-ink: #1a171a;             /* sidebar / DS obsidian depth */
-  --color-card: #221e22;            /* resting card on dark */
-  --color-surface: #2a262a;         /* secondary surface / hover */
-  --color-input: #1f1c1f;
-  --color-hairline: rgba(247, 246, 245, 0.08);
-  --color-hairline-strong: rgba(247, 246, 245, 0.16);
-
-  /* Foreground opacities on dark — straight from the DS. */
+  /* Surfaces */
+  --color-linen: #faf8f5;
   --color-paper: #f7f6f5;
-  --color-fg-1: #f7f6f5;
-  --color-fg-2: rgba(247, 246, 245, 0.64);
-  --color-fg-3: rgba(247, 246, 245, 0.48);
-  --color-fg-4: rgba(247, 246, 245, 0.32);
-  --color-fg-5: rgba(247, 246, 245, 0.08);
+  --color-paper-warm: #ececec;
+  --color-lift: #ffffff;
+  --color-ink: #231f23;
+  --color-obsidian: #1a171a;
 
-  /* Pastels · each feature owns one (DS canonical) */
+  /* Pastels */
   --color-orchid: #cebffa;
   --color-mint: #ccfdcf;
   --color-sky: #d7e9ff;
@@ -95,15 +86,7 @@
   --color-peach: #ffe1d6;
   --color-coral: #ed7472;
 
-  /* Pastel chip backgrounds — readable on dark */
-  --color-orchid-soft: rgba(206, 191, 250, 0.16);
-  --color-mint-soft: rgba(204, 253, 207, 0.16);
-  --color-sky-soft: rgba(215, 233, 255, 0.16);
-  --color-sand-soft: rgba(255, 244, 184, 0.16);
-  --color-peach-soft: rgba(255, 225, 214, 0.16);
-  --color-coral-soft: rgba(237, 116, 114, 0.16);
-
-  /* Warm spectrum · for the signature halo / mesh */
+  /* Warm spectrum · primary brand colors */
   --color-solar: #ed5a2a;
   --color-sunset: #f17a3b;
   --color-apricot: #f4a34e;
@@ -112,9 +95,21 @@
   --color-blush: #f17588;
   --color-magenta: #d8527a;
 
-  /* Semantic state */
-  --color-success: #6ec887;
-  --color-danger: #f06478;
+  /* Semantic */
+  --color-success: #4a7c59;
+  --color-danger: #e94560;
+
+  /* Foreground opacities on light */
+  --color-fg-1: #231f23;
+  --color-fg-2: rgba(35, 31, 35, 0.64);
+  --color-fg-3: rgba(35, 31, 35, 0.48);
+  --color-fg-4: rgba(35, 31, 35, 0.32);
+  --color-fg-5: rgba(35, 31, 35, 0.08);
+  --color-hairline: rgba(35, 31, 35, 0.08);
+  --color-hairline-strong: rgba(35, 31, 35, 0.16);
+
+  /* On dark (used for dark CTAs, drawer scrims, dark-canvas previews) */
+  --color-paper-fg: #f7f6f5;
 
   --font-sans: "Stack Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Stack Sans Headline", "Stack Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -122,32 +117,42 @@
 
   --radius-card: 20px;
   --radius-card-sm: 16px;
+  --radius-card-inner: 12px;
   --radius-icon: 12px;
   --radius-input: 10px;
   --radius-button: 8px;
   --radius-pill: 999px;
-
-  --shadow-card: 0 4px 80px rgba(0, 0, 0, 0.45);
-  --shadow-dropdown: 0 4px 40px rgba(0, 0, 0, 0.45);
-  --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.55);
 }
 
-/* ── Plain CSS custom properties (for var() consumers) ───────────────── */
-:root {
-  --canvas: #0e0c0e;
-  --ink-dark: #1a171a;
-  --card: #221e22;
-  --surface: #2a262a;
-  --input: #1f1c1f;
-  --hairline: rgba(247, 246, 245, 0.08);
-  --hairline-strong: rgba(247, 246, 245, 0.16);
-  --paper: #f7f6f5;
-  --fg-1: #f7f6f5;
-  --fg-2: rgba(247, 246, 245, 0.64);
-  --fg-3: rgba(247, 246, 245, 0.48);
-  --fg-4: rgba(247, 246, 245, 0.32);
-  --fg-5: rgba(247, 246, 245, 0.08);
+/* ── Plain CSS custom properties · for var() callers ───────────────────── */
 
+:root {
+  /* Surfaces */
+  --linen: #faf8f5;
+  --paper: #f7f6f5;
+  --paper-warm: #ececec;
+  --lift: #ffffff;
+  --ink: #231f23;
+  --obsidian: #1a171a;
+
+  /* Foreground opacities */
+  --fg-1: #231f23;
+  --fg-2: rgba(35, 31, 35, 0.64);
+  --fg-3: rgba(35, 31, 35, 0.48);
+  --fg-4: rgba(35, 31, 35, 0.32);
+  --fg-5: rgba(35, 31, 35, 0.08);
+  --hairline: rgba(35, 31, 35, 0.08);
+  --hairline-strong: rgba(35, 31, 35, 0.16);
+
+  /* On dark */
+  --fg-on-dark-1: #f7f6f5;
+  --fg-on-dark-2: rgba(247, 246, 245, 0.64);
+  --fg-on-dark-3: rgba(247, 246, 245, 0.48);
+  --fg-on-dark-4: rgba(247, 246, 245, 0.32);
+  --fg-on-dark-5: rgba(247, 246, 245, 0.08);
+  --hairline-dark: rgba(247, 246, 245, 0.08);
+
+  /* Pastels */
   --orchid: #cebffa;
   --mint: #ccfdcf;
   --sky: #d7e9ff;
@@ -155,36 +160,74 @@
   --peach: #ffe1d6;
   --coral: #ed7472;
 
+  /* Warm spectrum */
+  --solar: #ed5a2a;
+  --sunset: #f17a3b;
+  --apricot: #f4a34e;
+  --amber: #f5c044;
+  --blush: #f17588;
+  --magenta: #d8527a;
+
+  /* Semantic */
+  --success: #4a7c59;
+  --danger: #e94560;
+
+  /* Motion */
   --ease-brand: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-instant: 0.08s;
   --dur-fast: 0.2s;
   --dur-base: 0.3s;
   --dur-slow: 0.6s;
 
-  /* The signature halo · warm amber → coral → magenta — adapted slightly
-     for the dark canvas so it reads as a single bloom of light, not a wash. */
+  /* Elevation */
+  --shadow-e0: none;
+  --shadow-e1: 0 1px 2px rgba(35, 31, 35, 0.04), 0 1px 1px rgba(35, 31, 35, 0.03);
+  --shadow-e2: 0 4px 16px rgba(35, 31, 35, 0.06);
+  --shadow-e3: 0 8px 32px rgba(35, 31, 35, 0.08);
+  --shadow-e4: 0 16px 48px rgba(35, 31, 35, 0.12);
+  --shadow-e5: 0 24px 64px rgba(35, 31, 35, 0.18);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(237, 90, 42, 0.32);
+  --focus-ring-tight: 0 0 0 2px rgba(237, 90, 42, 0.4);
+  --focus-ring-dark: 0 0 0 3px rgba(245, 192, 68, 0.45);
+  --focus-outline-offset: 2px;
+
+  /* Density */
+  --row-h-cozy: 40px;
+  --row-h-compact: 32px;
+  --row-h-comfy: 52px;
+
+  /* The signature halo · use behind hero headlines, one per page */
   --halo: radial-gradient(
     55% 50% at 50% 45%,
-    rgba(245, 192, 68, 0.45) 0%,
-    rgba(244, 163, 78, 0.38) 22%,
-    rgba(241, 122, 59, 0.30) 42%,
-    rgba(237, 90, 42, 0.20) 62%,
-    rgba(216, 82, 122, 0.10) 80%,
+    rgba(245, 192, 68, 0.62) 0%,
+    rgba(244, 163, 78, 0.52) 22%,
+    rgba(241, 122, 59, 0.42) 42%,
+    rgba(237, 90, 42, 0.28) 62%,
+    rgba(216, 82, 122, 0.14) 80%,
     transparent 100%
   );
 
-  /* Warm mesh — sampled from DS. Used for the brand mark glyph. */
-  --mesh-mark: radial-gradient(80% 75% at 70% 25%, #f5c044 0%, rgba(245, 192, 68, 0) 70%),
-    radial-gradient(70% 70% at 20% 30%, #f17a3b 0%, rgba(241, 122, 59, 0) 70%),
-    radial-gradient(75% 70% at 60% 80%, #ed5a2a 0%, rgba(237, 90, 42, 0) 70%),
-    radial-gradient(60% 55% at 10% 90%, #d8527a 0%, rgba(216, 82, 122, 0) 70%),
-    linear-gradient(155deg, #f5c044 0%, #f17a3b 45%, #ed5a2a 75%, #d8527a 100%);
+  /* Warm mesh · primary expressive brand background */
+  --mesh-warm: radial-gradient(90% 75% at 82% 8%, rgba(245, 192, 68, 1) 0%, rgba(245, 192, 68, 0) 60%),
+    radial-gradient(85% 70% at 50% 14%, rgba(244, 163, 78, 1) 0%, rgba(244, 163, 78, 0) 60%),
+    radial-gradient(85% 75% at 6% 26%, rgba(237, 90, 42, 1) 0%, rgba(237, 90, 42, 0) 60%),
+    radial-gradient(90% 75% at 58% 44%, rgba(241, 122, 59, 1) 0%, rgba(241, 122, 59, 0) 60%),
+    radial-gradient(70% 60% at 22% 72%, rgba(241, 121, 126, 1) 0%, rgba(241, 121, 126, 0) 60%),
+    radial-gradient(65% 55% at 6% 96%, rgba(216, 82, 122, 1) 0%, rgba(216, 82, 122, 0) 60%),
+    linear-gradient(165deg, #f5c044 0%, #f4a34e 25%, #f17a3b 50%, #ed5a2a 75%, #d8527a 100%);
 }
 
-/* ── Base layer ──────────────────────────────────────────────────────── */
+/* ── Base layer ─────────────────────────────────────────────────────── */
 
 html,
 body {
-  background: var(--canvas);
+  background: var(--linen);
   color: var(--fg-1);
   font-family: var(--font-sans);
   font-weight: 300;
@@ -199,11 +242,11 @@ body {
 }
 
 ::selection {
-  background: var(--coral);
-  color: #0e0c0e;
+  background: rgba(237, 90, 42, 0.16);
+  color: var(--ink);
 }
 
-/* ── Typography roles ────────────────────────────────────────────────── */
+/* ── Typography roles ─────────────────────────────────────────────────── */
 
 .display-1 {
   font-family: var(--font-display);
@@ -218,34 +261,37 @@ body {
   font-family: var(--font-display);
   font-weight: 400;
   font-size: clamp(32px, 4.6vw, 56px);
-  letter-spacing: -1.2px;
+  letter-spacing: -1.4px;
   line-height: 1.05;
   text-wrap: balance;
 }
 
 .h1 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(28px, 3vw, 40px);
-  letter-spacing: -0.8px;
-  line-height: 1.1;
+  font-weight: 500;
+  font-size: clamp(26px, 2.8vw, 34px);
+  letter-spacing: -0.6px;
+  line-height: 1.12;
   text-wrap: balance;
+  color: var(--fg-1);
 }
 
 .h2 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 22px;
   letter-spacing: -0.4px;
   line-height: 1.18;
+  color: var(--fg-1);
 }
 
 .h3 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 17px;
   letter-spacing: -0.2px;
   line-height: 1.25;
+  color: var(--fg-1);
 }
 
 .body-lg {
@@ -262,7 +308,7 @@ body {
 }
 .body-sm {
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--fg-2);
   font-weight: 300;
 }
@@ -275,7 +321,6 @@ body {
   color: var(--fg-3);
   font-weight: 400;
 }
-
 .label-sm {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -285,45 +330,48 @@ body {
   font-weight: 400;
 }
 
-/* ── Surface utilities ───────────────────────────────────────────────── */
+/* ── Surface utilities ────────────────────────────────────────────────── */
 
 .surface {
-  background: var(--card);
+  background: var(--lift);
   border: 1px solid var(--hairline);
   border-radius: 20px;
 }
 
 .surface-sm {
-  background: var(--card);
+  background: var(--lift);
   border: 1px solid var(--hairline);
   border-radius: 16px;
 }
 
 .surface-flat {
-  background: rgba(247, 246, 245, 0.02);
+  background: var(--paper);
   border: 1px solid var(--hairline);
   border-radius: 20px;
 }
 
 .surface-hover {
-  transition: background var(--dur-fast) var(--ease-brand),
-    border-color var(--dur-fast) var(--ease-brand);
+  transition: box-shadow var(--dur-fast) var(--ease-brand),
+    transform var(--dur-fast) var(--ease-brand);
 }
 .surface-hover:hover {
-  background: var(--surface);
-  border-color: var(--hairline-strong);
+  box-shadow: var(--shadow-e3);
+  transform: translateY(-2px);
 }
 
 .input-shell {
-  background: var(--input);
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
+  background: var(--lift);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-e1);
 }
 .input-shell:focus-within {
-  border-color: var(--hairline-strong);
+  border-color: var(--solar);
+  box-shadow: var(--focus-ring), var(--shadow-e1);
 }
 
-/* ── The signature halo (used on Home / Generating) ─────────────────── */
+/* ── The signature halo ──────────────────────────────────────────────── */
+
 .halo-bloom {
   position: absolute;
   inset: auto;
@@ -335,14 +383,16 @@ body {
   z-index: 0;
 }
 
-/* ── Mark glyph (the warm coral→peach cluster) ───────────────────────── */
+/* ── Brand glyph (warm mesh tile) ────────────────────────────────────── */
+
 .brand-glyph {
-  background: var(--mesh-mark);
+  background: var(--mesh-warm);
   box-shadow: 0 14px 60px rgba(237, 90, 42, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-/* ── Pastel icon tile (DS canonical decorative element) ──────────────── */
+/* ── Icon tile ───────────────────────────────────────────────────────── */
+
 .icon-tile {
   display: inline-flex;
   align-items: center;
@@ -351,28 +401,30 @@ body {
 }
 
 /* ── Scrollbars ──────────────────────────────────────────────────────── */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(247, 246, 245, 0.08);
+  background: rgba(35, 31, 35, 0.12);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* ── Live indicators ─────────────────────────────────────────────────── */
+/* ── Live indicator (mint pulse) ─────────────────────────────────────── */
+
 @keyframes sp-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(110, 200, 135, 0.55);
+    box-shadow: 0 0 0 0 rgba(74, 124, 89, 0.45);
   }
   70% {
-    box-shadow: 0 0 0 6px rgba(110, 200, 135, 0);
+    box-shadow: 0 0 0 6px rgba(74, 124, 89, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(110, 200, 135, 0);
+    box-shadow: 0 0 0 0 rgba(74, 124, 89, 0);
   }
 }
 
@@ -384,30 +436,19 @@ body {
   animation: sp-pulse 2s infinite;
 }
 
-/* ── Subtle grain on dark sections (DS pattern) ──────────────────────── */
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-size: 240px 240px;
-  mix-blend-mode: screen;
-  opacity: 0.5;
-  z-index: 1;
-}
-
 /* ── Focus rings ─────────────────────────────────────────────────────── */
+
 :focus:not(:focus-visible) {
   outline: none;
 }
 :focus-visible {
-  outline: 1px solid rgba(237, 116, 114, 0.55);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--focus-ring);
   border-radius: 8px;
 }
 
 /* ── Status line fade ────────────────────────────────────────────────── */
+
 @keyframes sp-fade-in {
   0% {
     opacity: 0;
@@ -418,7 +459,6 @@ body {
     transform: translateY(0);
   }
 }
-
 .fade-in {
   animation: sp-fade-in 0.6s var(--ease-brand) forwards;
 }

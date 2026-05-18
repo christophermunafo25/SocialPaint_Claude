@@ -92,11 +92,11 @@ export default function AdminActivityPage() {
   if (user.role !== "Admin" && user.role !== "Owner") return null;
 
   return (
-    <div className="px-10 py-9 max-w-[1340px] mx-auto">
+    <div className="px-8 py-9 max-w-[1340px] mx-auto">
       <div className="flex items-center gap-2 mb-3">
         <Eyebrow>Admin · Observability</Eyebrow>
       </div>
-      <div className="flex items-end justify-between gap-6 mb-7">
+      <div className="flex items-end justify-between gap-6 mb-8">
         <div>
           <h1 className="h1">Activity</h1>
           <p className="body mt-1.5">
@@ -106,9 +106,9 @@ export default function AdminActivityPage() {
         <span
           className="inline-flex items-center gap-2 text-[12px] px-3 h-9 rounded-full"
           style={{
-            background: "rgba(110,200,135,0.10)",
-            color: "#a9e8b5",
-            border: "1px solid rgba(110,200,135,0.20)",
+            background: "rgba(74,124,89,0.08)",
+            color: "var(--success)",
+            border: "1px solid rgba(74,124,89,0.20)",
           }}
         >
           <span className="live-dot" />
@@ -116,13 +116,8 @@ export default function AdminActivityPage() {
         </span>
       </div>
 
-      {/* KPI tiles · pastel feature tile pattern */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <KpiCard
-          label="Designs today"
-          value={designsToday.toString()}
-          pastel="var(--mint)"
-        />
+        <KpiCard label="Designs today" value={designsToday.toString()} pastel="var(--mint)" />
         <KpiCard
           label="Avg compliance"
           value={avgCompliance ? avgCompliance.toString() : "—"}
@@ -136,14 +131,13 @@ export default function AdminActivityPage() {
         />
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <Filter label="Member">
           <select
             value={memberFilter}
             onChange={(e) => setMemberFilter(e.target.value)}
             className="bg-transparent outline-none text-[12.5px] pr-1"
-            style={{ color: "var(--fg-1)" }}
+            style={{ color: "var(--ink)" }}
           >
             <option value="all">All members</option>
             {team.map((m) => (
@@ -158,7 +152,7 @@ export default function AdminActivityPage() {
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             className="bg-transparent outline-none text-[12.5px] pr-1"
-            style={{ color: "var(--fg-1)" }}
+            style={{ color: "var(--ink)" }}
           >
             <option value="all">All types</option>
             {designTypes.map((t) => (
@@ -173,7 +167,7 @@ export default function AdminActivityPage() {
             value={scoreFilter}
             onChange={(e) => setScoreFilter(e.target.value as ScoreBand)}
             className="bg-transparent outline-none text-[12.5px] pr-1"
-            style={{ color: "var(--fg-1)" }}
+            style={{ color: "var(--ink)" }}
           >
             <option value="all">All scores</option>
             <option value="ON-BRAND">On-brand (90+)</option>
@@ -186,7 +180,7 @@ export default function AdminActivityPage() {
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as DateFilter)}
             className="bg-transparent outline-none text-[12.5px] pr-1"
-            style={{ color: "var(--fg-1)" }}
+            style={{ color: "var(--ink)" }}
           >
             <option value="24h">Last 24h</option>
             <option value="7d">Last 7d</option>
@@ -194,14 +188,16 @@ export default function AdminActivityPage() {
             <option value="all">All time</option>
           </select>
         </Filter>
-        <span className="ml-auto label-sm">{filtered.length} events shown</span>
+        <span className="ml-auto label">{filtered.length} events shown</span>
       </div>
 
-      {/* Table */}
-      <div className="surface overflow-hidden">
+      <div className="surface overflow-hidden" style={{ boxShadow: "var(--shadow-e1)" }}>
         <div
           className="grid grid-cols-[1.4fr_2.2fr_0.9fr_0.9fr_0.7fr_0.4fr] px-5 py-3 border-b label"
-          style={{ borderColor: "var(--hairline)" }}
+          style={{
+            borderColor: "var(--hairline)",
+            background: "var(--paper)",
+          }}
         >
           <div>Member</div>
           <div>Prompt / action</div>
@@ -224,11 +220,7 @@ export default function AdminActivityPage() {
 
       <div className="mt-5 body-sm" style={{ color: "var(--fg-3)" }}>
         Approvals removed in v2 — admins observe, members ship.{" "}
-        <Link
-          href="/settings"
-          className="underline transition-opacity"
-          style={{ color: "var(--fg-1)", textDecorationColor: "var(--fg-4)" }}
-        >
+        <Link href="/settings" className="underline" style={{ color: "var(--ink)" }}>
           Manage members
         </Link>
         .
@@ -249,7 +241,7 @@ function KpiCard({
   tone?: "neutral" | "warn";
 }) {
   return (
-    <div className="surface p-5 relative overflow-hidden">
+    <div className="surface p-5 relative overflow-hidden" style={{ boxShadow: "var(--shadow-e1)" }}>
       <div className="flex items-start justify-between">
         <Eyebrow>{label}</Eyebrow>
         <span
@@ -258,18 +250,18 @@ function KpiCard({
             width: 28,
             height: 28,
             background: pastel,
-            color: "#231f23",
+            color: "var(--ink)",
           }}
         >
-          <ActivityIcon size={14} strokeWidth={1.6} />
+          <ActivityIcon size={14} strokeWidth={1.75} />
         </span>
       </div>
       <div
         className="mt-3 text-[42px] tabular-nums"
         style={{
-          color: tone === "warn" ? "#f29593" : "var(--fg-1)",
+          color: tone === "warn" ? "#a23a48" : "var(--ink)",
           fontFamily: "var(--font-display)",
-          fontWeight: 400,
+          fontWeight: 500,
           letterSpacing: "-1.5px",
           lineHeight: 1,
         }}
@@ -285,7 +277,7 @@ function Filter({ label, children }: { label: string; children: React.ReactNode 
     <div
       className="h-9 px-3 rounded-lg inline-flex items-center gap-2 transition-colors"
       style={{
-        background: "rgba(247,246,245,0.04)",
+        background: "var(--lift)",
         border: "1px solid var(--hairline)",
       }}
     >
@@ -334,21 +326,19 @@ function ActivityRow({
 
   return (
     <div
-      className={cn(
-        "grid grid-cols-[1.4fr_2.2fr_0.9fr_0.9fr_0.7fr_0.4fr] px-5 py-3 items-center border-b transition-colors group"
-      )}
+      className="grid grid-cols-[1.4fr_2.2fr_0.9fr_0.9fr_0.7fr_0.4fr] px-5 py-3 items-center border-b transition-colors group"
       style={{
         borderColor: "var(--hairline)",
-        background: event.flaggedByAdmin ? "rgba(237,116,114,0.04)" : "transparent",
+        background: event.flaggedByAdmin ? "rgba(237,90,42,0.04)" : "var(--lift)",
       }}
     >
       <div className="flex items-center gap-2.5 min-w-0">
         <Avatar
           initials={user?.initials ?? "??"}
-          color={user?.avatarColor ?? "#888"}
+          color={user?.avatarColor ?? "#dcdcdc"}
           size={26}
         />
-        <span className="text-[13.5px] truncate" style={{ color: "var(--fg-1)" }}>
+        <span className="text-[13.5px] truncate" style={{ color: "var(--ink)" }}>
           {user?.name ?? "—"}
         </span>
       </div>
@@ -373,30 +363,29 @@ function ActivityRow({
             "h-7 w-7 rounded-lg inline-flex items-center justify-center transition-colors"
           )}
           style={{
-            background: event.flaggedByAdmin ? "var(--coral)" : "transparent",
-            color: event.flaggedByAdmin ? "#0e0c0e" : "var(--fg-4)",
+            background: event.flaggedByAdmin ? "var(--solar)" : "transparent",
+            color: event.flaggedByAdmin ? "white" : "var(--fg-3)",
           }}
           aria-label={event.flaggedByAdmin ? "Unflag" : "Flag for review"}
-          title={event.flaggedByAdmin ? "Unflag" : "Mark Needs review"}
         >
-          <Flag size={12} strokeWidth={1.6} />
+          <Flag size={12} strokeWidth={1.75} />
         </button>
         {event.generationId && (
           <button
             onClick={open}
             className="h-7 w-7 rounded-lg inline-flex items-center justify-center transition-colors"
-            style={{ color: "var(--fg-4)" }}
+            style={{ color: "var(--fg-3)" }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(247,246,245,0.05)";
-              e.currentTarget.style.color = "var(--fg-1)";
+              e.currentTarget.style.background = "var(--paper)";
+              e.currentTarget.style.color = "var(--ink)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "var(--fg-4)";
+              e.currentTarget.style.color = "var(--fg-3)";
             }}
             aria-label="Open"
           >
-            <ChevronRight size={14} strokeWidth={1.6} />
+            <ChevronRight size={14} strokeWidth={1.75} />
           </button>
         )}
       </div>

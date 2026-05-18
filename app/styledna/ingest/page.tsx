@@ -110,37 +110,40 @@ export default function IngestPage() {
   };
 
   return (
-    <div className="px-10 py-9 max-w-[960px] mx-auto">
+    <div className="px-8 py-9 max-w-[960px] mx-auto">
       <div className="flex items-center gap-3 mb-2">
         <button
           onClick={() => router.push("/styledna")}
           className="h-9 w-9 rounded-lg inline-flex items-center justify-center transition-colors"
-          style={{ color: "var(--fg-3)" }}
+          style={{ color: "var(--fg-2)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(247,246,245,0.05)";
-            e.currentTarget.style.color = "var(--fg-1)";
+            e.currentTarget.style.background = "rgba(35,31,35,0.05)";
+            e.currentTarget.style.color = "var(--ink)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--fg-3)";
+            e.currentTarget.style.color = "var(--fg-2)";
           }}
           aria-label="Back to StyleDNA"
         >
-          <ArrowLeft size={16} strokeWidth={1.6} />
+          <ArrowLeft size={16} strokeWidth={1.75} />
         </button>
         <Eyebrow>Asset ingestion · Feed StyleDNA</Eyebrow>
       </div>
       <h1 className="h1 mb-7">Add new observations</h1>
 
-      <div className="surface p-6">
-        <div className="flex items-center gap-1 mb-5 border-b" style={{ borderColor: "var(--hairline)" }}>
+      <div className="surface p-6" style={{ boxShadow: "var(--shadow-e1)" }}>
+        <div
+          className="flex items-center gap-1 mb-5 border-b"
+          style={{ borderColor: "var(--hairline)" }}
+        >
           {(["upload", "link"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className="relative h-10 px-4 text-[13px] transition-colors"
               style={{
-                color: tab === t ? "var(--fg-1)" : "var(--fg-3)",
+                color: tab === t ? "var(--ink)" : "var(--fg-3)",
                 fontWeight: 400,
               }}
             >
@@ -148,7 +151,7 @@ export default function IngestPage() {
               {tab === t && (
                 <span
                   className="absolute -bottom-px left-0 right-0 h-[2px]"
-                  style={{ background: "var(--coral)" }}
+                  style={{ background: "var(--solar)" }}
                 />
               )}
             </button>
@@ -169,27 +172,27 @@ export default function IngestPage() {
             }}
             onClick={() => inputRef.current?.click()}
             className={cn(
-              "rounded-2xl border border-dashed h-[280px] flex flex-col items-center justify-center text-center cursor-pointer transition-all"
+              "rounded-2xl border-2 border-dashed h-[280px] flex flex-col items-center justify-center text-center cursor-pointer transition-all"
             )}
             style={{
-              borderColor: dragOver ? "var(--coral)" : "rgba(247,246,245,0.14)",
+              borderColor: dragOver ? "var(--solar)" : "var(--hairline-strong)",
               background: dragOver
-                ? "rgba(237,116,114,0.04)"
-                : "rgba(247,246,245,0.01)",
+                ? "rgba(237,90,42,0.04)"
+                : "var(--paper)",
             }}
           >
             <div
               className="icon-tile mb-4"
               style={{
-                width: 44,
-                height: 44,
+                width: 48,
+                height: 48,
                 background: "var(--orchid)",
-                color: "#231f23",
+                color: "var(--ink)",
               }}
             >
-              <Upload size={18} strokeWidth={1.6} />
+              <Upload size={20} strokeWidth={1.6} />
             </div>
-            <div className="body" style={{ color: "var(--fg-1)" }}>
+            <div className="text-[14px]" style={{ color: "var(--ink)", fontWeight: 400 }}>
               Drop PNG, JPG, PDF, or SVG here
             </div>
             <div className="label mt-2">Or click to browse · multi-file supported</div>
@@ -205,19 +208,19 @@ export default function IngestPage() {
 
         {phase === "idle" && tab === "link" && (
           <div
-            className="rounded-2xl p-4 flex items-center gap-3"
+            className="rounded-xl p-4 flex items-center gap-3"
             style={{
-              background: "var(--input)",
-              border: "1px solid var(--hairline)",
+              background: "var(--paper)",
+              border: "1px solid var(--hairline-strong)",
             }}
           >
-            <LinkIcon size={15} style={{ color: "var(--fg-3)" }} strokeWidth={1.6} />
+            <LinkIcon size={15} style={{ color: "var(--fg-3)" }} strokeWidth={1.75} />
             <input
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
               placeholder="https://figma.com/file/X8j2…/Acme-Q3"
               className="flex-1 bg-transparent outline-none text-[14px]"
-              style={{ color: "var(--fg-1)", fontWeight: 300 }}
+              style={{ color: "var(--ink)", fontWeight: 300 }}
             />
             <Button variant="primary" disabled={linkUrl.trim().length < 8} onClick={handlePasteLink}>
               Analyze
@@ -230,12 +233,12 @@ export default function IngestPage() {
             <div
               className="rounded-xl p-4 flex items-center gap-3"
               style={{
-                background: "var(--input)",
+                background: "var(--paper)",
                 border: "1px solid var(--hairline)",
               }}
             >
-              <FileUp size={15} style={{ color: "var(--fg-2)" }} strokeWidth={1.6} />
-              <span className="text-[13.5px] truncate" style={{ color: "var(--fg-1)" }}>
+              <FileUp size={15} style={{ color: "var(--fg-2)" }} strokeWidth={1.75} />
+              <span className="text-[13.5px] truncate" style={{ color: "var(--ink)" }}>
                 {ingestion.source === "link"
                   ? ingestion.url
                   : ingestion.fileName ?? "Uploaded asset"}
@@ -256,9 +259,8 @@ export default function IngestPage() {
                     key={l}
                     className="text-[14px] transition-opacity"
                     style={{
-                      opacity: i === stage ? 1 : i < stage ? 0.25 : 0.42,
-                      color:
-                        i === stage ? "var(--fg-1)" : "var(--fg-3)",
+                      opacity: i === stage ? 1 : i < stage ? 0.25 : 0.48,
+                      color: i === stage ? "var(--ink)" : "var(--fg-3)",
                       fontWeight: 300,
                     }}
                   >
@@ -266,8 +268,8 @@ export default function IngestPage() {
                   </div>
                 ))}
                 <div className="mt-5 flex items-center gap-2 label">
-                  <Loader2 size={13} className="animate-spin" /> Reading typography, color
-                  hierarchy, layout DNA…
+                  <Loader2 size={13} className="animate-spin" />
+                  Reading typography, color hierarchy, layout DNA…
                 </div>
               </div>
             )}
@@ -288,16 +290,16 @@ export default function IngestPage() {
                         className="rounded-2xl p-4 border transition-colors"
                         style={{
                           background: accepted
-                            ? "rgba(204,253,207,0.05)"
+                            ? "rgba(204,253,207,0.40)"
                             : rejected
-                            ? "rgba(237,116,114,0.04)"
-                            : "rgba(247,246,245,0.02)",
+                            ? "rgba(233,69,96,0.06)"
+                            : "var(--paper)",
                           borderColor: accepted
-                            ? "rgba(204,253,207,0.20)"
+                            ? "rgba(74,124,89,0.30)"
                             : rejected
-                            ? "rgba(237,116,114,0.20)"
+                            ? "rgba(233,69,96,0.25)"
                             : "var(--hairline)",
-                          opacity: rejected ? 0.6 : 1,
+                          opacity: rejected ? 0.65 : 1,
                         }}
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -323,9 +325,9 @@ export default function IngestPage() {
                           className="text-[14px] mt-2"
                           style={{
                             fontFamily: "var(--font-display)",
-                            fontWeight: 400,
+                            fontWeight: 500,
                             letterSpacing: "-0.2px",
-                            color: "var(--fg-1)",
+                            color: "var(--ink)",
                           }}
                         >
                           {obs.title}
@@ -341,26 +343,22 @@ export default function IngestPage() {
                             onClick={() => toggleObs(obs.id, false)}
                             className="h-7 w-7 rounded-lg inline-flex items-center justify-center transition-colors"
                             style={{
-                              background: rejected
-                                ? "var(--coral)"
-                                : "rgba(247,246,245,0.04)",
-                              color: rejected ? "#0e0c0e" : "var(--fg-3)",
+                              background: rejected ? "var(--danger)" : "rgba(35,31,35,0.05)",
+                              color: rejected ? "white" : "var(--fg-3)",
                             }}
                             aria-label="Reject"
                           >
-                            <X size={13} strokeWidth={1.6} />
+                            <X size={13} strokeWidth={1.75} />
                           </button>
                           <button
                             onClick={() => toggleObs(obs.id, true)}
                             className="h-7 px-3 rounded-lg inline-flex items-center gap-1.5 text-[12.5px] transition-colors"
                             style={{
-                              background: accepted
-                                ? "var(--mint)"
-                                : "rgba(247,246,245,0.04)",
-                              color: accepted ? "#231f23" : "var(--fg-1)",
+                              background: accepted ? "var(--success)" : "rgba(35,31,35,0.05)",
+                              color: accepted ? "white" : "var(--ink)",
                             }}
                           >
-                            <Check size={13} strokeWidth={1.6} />
+                            <Check size={13} strokeWidth={1.75} />
                             {accepted ? "Accepted" : "Accept"}
                           </button>
                         </div>
@@ -370,7 +368,7 @@ export default function IngestPage() {
                 </div>
 
                 <div className="mt-6 flex items-center gap-3">
-                  <div className="body-sm" style={{ color: "var(--fg-2)" }}>
+                  <div className="body-sm">
                     {ingestion.detectedObservations.filter((o) => o.accepted === true).length} of{" "}
                     {ingestion.detectedObservations.length} accepted
                   </div>
@@ -394,12 +392,12 @@ export default function IngestPage() {
                     width: 48,
                     height: 48,
                     background: "var(--mint)",
-                    color: "#231f23",
+                    color: "var(--ink)",
                   }}
                 >
-                  <Check size={20} strokeWidth={1.6} />
+                  <Check size={20} strokeWidth={1.75} />
                 </div>
-                <div className="h3" style={{ color: "var(--fg-1)" }}>
+                <div className="h3" style={{ color: "var(--ink)" }}>
                   Observations added.
                 </div>
                 <div className="label mt-2">Returning to StyleDNA…</div>

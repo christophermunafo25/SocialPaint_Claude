@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { HeroHalo } from "@/components/ui/BrandMark";
 import { motion } from "framer-motion";
 
-/**
- * DS Generating moment — sentence-case rotating status lines, single coral halo,
- * thin warm progress bar, Fragment Mono meta. No spinners.
- */
 const STATUS_LINES = [
   "Reading StyleDNA…",
   "Applying brand colors…",
@@ -43,14 +39,17 @@ export function Generating({ totalMs = 3500 }: { totalMs?: number }) {
   }, [totalMs]);
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden isolate">
+    <div
+      className="relative min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-6 overflow-hidden isolate"
+      style={{ background: "var(--linen)" }}
+    >
       <HeroHalo
         width={920}
         height={560}
         style={{ top: "20%", left: "50%", transform: "translateX(-50%)" }}
       />
 
-      <div className="h-[140px] flex flex-col items-center gap-1.5 relative">
+      <div className="h-[160px] flex flex-col items-center gap-2 relative">
         {STATUS_LINES.map((line, i) => {
           const isActive = i === stage;
           const isPast = i < stage;
@@ -58,12 +57,13 @@ export function Generating({ totalMs = 3500 }: { totalMs?: number }) {
             <motion.div
               key={line}
               initial={false}
-              animate={{ opacity: isActive ? 1 : isPast ? 0.22 : 0.38, y: 0 }}
+              animate={{ opacity: isActive ? 1 : isPast ? 0.22 : 0.4, y: 0 }}
               transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-              className="display-2 text-[26px] sm:text-[32px]"
+              className="text-[28px] sm:text-[36px]"
               style={{
-                color: isActive ? "var(--fg-1)" : "var(--fg-3)",
-                letterSpacing: "-0.6px",
+                color: isActive ? "var(--ink)" : "var(--fg-3)",
+                fontFamily: "var(--font-display)",
+                letterSpacing: "-0.8px",
                 fontWeight: 400,
               }}
             >
@@ -75,7 +75,7 @@ export function Generating({ totalMs = 3500 }: { totalMs?: number }) {
 
       <div
         className="mt-12 w-[320px] h-[2px] rounded-full overflow-hidden relative"
-        style={{ background: "rgba(247,246,245,0.06)" }}
+        style={{ background: "rgba(35,31,35,0.08)" }}
       >
         <div
           className="h-full transition-[width] duration-100"

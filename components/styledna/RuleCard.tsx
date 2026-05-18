@@ -15,6 +15,7 @@ export function RuleCard({
   return (
     <div
       className="surface surface-hover p-5 cursor-pointer relative group"
+      style={{ boxShadow: "var(--shadow-e1)" }}
       onClick={onEdit}
     >
       <div className="flex items-start justify-between gap-3">
@@ -22,21 +23,25 @@ export function RuleCard({
           className="text-[15.5px] leading-tight"
           style={{
             fontFamily: "var(--font-display)",
-            fontWeight: 400,
+            fontWeight: 500,
             letterSpacing: "-0.2px",
-            color: "var(--fg-1)",
+            color: "var(--ink)",
           }}
         >
           {rule.title}
         </h3>
         <button
           className="transition-colors"
-          style={{ color: "var(--fg-4)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg-1)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-4)")}
+          style={{ color: "var(--fg-3)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--fg-3)")}
           aria-label="Edit rule"
         >
-          {rule.isLocked ? <Lock size={13} strokeWidth={1.6} /> : <Pencil size={13} strokeWidth={1.6} />}
+          {rule.isLocked ? (
+            <Lock size={13} strokeWidth={1.75} />
+          ) : (
+            <Pencil size={13} strokeWidth={1.75} />
+          )}
         </button>
       </div>
 
@@ -53,7 +58,7 @@ export function RuleCard({
             <span
               key={s}
               className="h-6 w-6 rounded-md"
-              style={{ background: s, border: "1px solid rgba(247,246,245,0.10)" }}
+              style={{ background: s, border: "1px solid var(--hairline)" }}
             />
           ))}
         </div>
@@ -82,9 +87,11 @@ export function RuleCard({
       {rule.isDisabled && (
         <div
           className="absolute inset-0 rounded-[20px] flex items-center justify-center"
-          style={{ background: "rgba(14,12,14,0.55)", backdropFilter: "blur(2px)" }}
+          style={{ background: "rgba(247,246,245,0.65)", backdropFilter: "blur(2px)" }}
         >
-          <span className="label">Disabled</span>
+          <span className="label" style={{ color: "var(--fg-2)" }}>
+            Disabled
+          </span>
         </div>
       )}
     </div>

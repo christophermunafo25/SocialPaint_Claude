@@ -48,7 +48,7 @@ export default function TemplatesPage() {
     filter === "All" ? TEMPLATES : TEMPLATES.filter((t) => t.category === filter);
 
   return (
-    <div className="px-10 py-9 max-w-[1320px] mx-auto">
+    <div className="px-8 py-9 max-w-[1340px] mx-auto">
       <div className="flex items-center gap-2 mb-3">
         <Eyebrow>Brand templates · Pre-built starts</Eyebrow>
       </div>
@@ -59,7 +59,7 @@ export default function TemplatesPage() {
             width: 48,
             height: 48,
             background: "var(--peach)",
-            color: "#231f23",
+            color: "var(--ink)",
           }}
         >
           <LayoutTemplate size={20} strokeWidth={1.5} />
@@ -80,9 +80,9 @@ export default function TemplatesPage() {
             onClick={() => setFilter(f)}
             className="h-9 px-4 rounded-full text-[12.5px] transition-colors"
             style={{
-              color: filter === f ? "var(--canvas)" : "var(--fg-2)",
-              background:
-                filter === f ? "var(--paper)" : "rgba(247,246,245,0.04)",
+              color: filter === f ? "white" : "var(--fg-2)",
+              background: filter === f ? "var(--ink)" : "var(--lift)",
+              border: filter === f ? "1px solid var(--ink)" : "1px solid var(--hairline)",
               fontWeight: 400,
             }}
           >
@@ -100,21 +100,20 @@ export default function TemplatesPage() {
               key={t.id}
               href={`/generate?prompt=${encodeURIComponent(t.prompt)}&type=${encodeURIComponent(t.designType)}`}
               className="surface surface-hover p-4 block group"
+              style={{ boxShadow: "var(--shadow-e1)" }}
             >
               <DesignPreview design={design} />
               <div className="mt-4 flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div
                     className="text-[14px] truncate"
-                    style={{ color: "var(--fg-1)", fontWeight: 400 }}
+                    style={{ color: "var(--ink)", fontWeight: 500, fontFamily: "var(--font-display)" }}
                   >
                     {t.name}
                   </div>
                   <div className="label-sm truncate mt-0.5">{t.description}</div>
                 </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <Chip tone="mint">{t.designType}</Chip>
-                </div>
+                <Chip tone="solar">{t.designType}</Chip>
               </div>
             </Link>
           );

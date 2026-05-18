@@ -13,10 +13,10 @@ export function complianceBand(score: number): "ON-BRAND" | "MOSTLY" | "REVIEW" 
 
 export function complianceColor(score: number) {
   const band = complianceBand(score);
-  // DS palette · success (mint-ish leaf), sand (warm), danger (coral-deep)
-  if (band === "ON-BRAND") return { fg: "#a9e8b5", bg: "rgba(204, 253, 207, 0.10)" };
-  if (band === "MOSTLY") return { fg: "#f3da8a", bg: "rgba(255, 244, 184, 0.10)" };
-  return { fg: "#f29593", bg: "rgba(237, 116, 114, 0.10)" };
+  // DS palette tuned for light surfaces — readable text inside tinted pills.
+  if (band === "ON-BRAND") return { fg: "#3a6244", bg: "rgba(204, 253, 207, 0.55)" };
+  if (band === "MOSTLY") return { fg: "#8a6a1f", bg: "rgba(255, 244, 184, 0.70)" };
+  return { fg: "#a23a48", bg: "rgba(233, 69, 96, 0.10)" };
 }
 
 export function relativeTime(iso: string) {

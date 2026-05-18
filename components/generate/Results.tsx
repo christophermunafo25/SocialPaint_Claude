@@ -81,42 +81,42 @@ export function Results({ generation }: Props) {
   };
 
   return (
-    <div className="px-10 py-9 max-w-[1320px] mx-auto">
-      <div className="flex items-center gap-3 mb-4">
+    <div className="px-8 py-9 max-w-[1340px] mx-auto" style={{ background: "var(--linen)" }}>
+      <div className="flex items-center gap-3 mb-5">
         <button
           onClick={() => router.push("/generate")}
           className="h-9 w-9 rounded-lg inline-flex items-center justify-center transition-colors"
-          style={{ color: "var(--fg-3)" }}
+          style={{ color: "var(--fg-2)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(247,246,245,0.05)";
-            e.currentTarget.style.color = "var(--fg-1)";
+            e.currentTarget.style.background = "rgba(35,31,35,0.05)";
+            e.currentTarget.style.color = "var(--ink)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--fg-3)";
+            e.currentTarget.style.color = "var(--fg-2)";
           }}
           aria-label="Back"
         >
-          <ArrowLeft size={16} strokeWidth={1.6} />
+          <ArrowLeft size={16} strokeWidth={1.75} />
         </button>
-        <Eyebrow>Generate · Three options</Eyebrow>
+        <Eyebrow>Generate · 3 options · {platform.label}</Eyebrow>
       </div>
 
-      <div className="flex items-start gap-6 mb-7">
+      <div className="flex items-start gap-6 mb-8">
         <div className="flex-1 min-w-0">
           <h1 className="h1 mb-2" style={{ maxWidth: "30ch" }}>
             {truncatePrompt(generation.prompt)}
           </h1>
           <div className="flex items-center gap-2 flex-wrap">
-            <Chip tone="mint">{platform.label}</Chip>
-            <span className="label-sm">·</span>
-            <span className="label-sm">
+            <Chip tone="solar">{platform.label}</Chip>
+            <span className="label">·</span>
+            <span className="label">
               {platform.width} × {platform.height}px · {platform.ratioLabel}
             </span>
           </div>
         </div>
         <Button variant="outline" size="md" onClick={regenerate} disabled={regenerating}>
-          <RefreshCw size={13} strokeWidth={1.6} className={regenerating ? "animate-spin" : ""} />
+          <RefreshCw size={13} strokeWidth={1.75} className={regenerating ? "animate-spin" : ""} />
           {regenerating ? "Regenerating…" : "Regenerate all"}
         </Button>
       </div>
@@ -125,18 +125,22 @@ export function Results({ generation }: Props) {
         {generation.options.map((opt) => {
           const isLoading = perVariantLoading === opt.id;
           return (
-            <div key={opt.id} className="surface surface-hover p-4 group relative">
-              <Link href={`/generate/${generation.id}/${opt.id}`} className="block">
+            <div key={opt.id} className="group relative">
+              <Link
+                href={`/generate/${generation.id}/${opt.id}`}
+                className="block surface surface-hover p-4"
+                style={{ boxShadow: "var(--shadow-e2)" }}
+              >
                 <div className="relative">
                   <DesignPreview design={opt} />
                   {isLoading && (
                     <div
                       className="absolute inset-0 rounded-2xl flex items-center justify-center backdrop-blur-sm"
-                      style={{ background: "rgba(14,12,14,0.45)" }}
+                      style={{ background: "rgba(247,246,245,0.65)" }}
                     >
                       <span
-                        className="flex items-center gap-1.5 text-[12px]"
-                        style={{ color: "var(--fg-1)" }}
+                        className="flex items-center gap-1.5 text-[12.5px]"
+                        style={{ color: "var(--ink)" }}
                       >
                         <RefreshCw size={13} className="animate-spin" /> Refreshing…
                       </span>
@@ -145,17 +149,14 @@ export function Results({ generation }: Props) {
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="label">Option {opt.letter}</span>
+                    <span className="label" style={{ color: "var(--ink)" }}>
+                      Option {opt.letter}
+                    </span>
                     <span className="label-sm">· {compositionLabel(opt.composition)}</span>
                   </div>
                   <ComplianceBadge score={opt.complianceScore} />
                 </div>
-                <div
-                  className="mt-2 flex items-center body-sm"
-                  style={{ color: "var(--fg-3)" }}
-                >
-                  Open · Save · Variations
-                </div>
+                <div className="mt-2 body-sm">Open · Save · Variations</div>
               </Link>
               <button
                 onClick={(e) => {
@@ -164,15 +165,16 @@ export function Results({ generation }: Props) {
                   regenerateOne(opt.id);
                 }}
                 disabled={isLoading || regenerating}
-                title="Regenerate this option (fresh composition)"
+                title="Shuffle this option · fresh composition"
                 className="absolute top-7 right-7 h-8 w-8 rounded-lg inline-flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
                 style={{
-                  background: "rgba(247,246,245,0.10)",
-                  color: "var(--fg-1)",
-                  backdropFilter: "blur(8px)",
+                  background: "var(--lift)",
+                  color: "var(--ink)",
+                  boxShadow: "var(--shadow-e2)",
+                  border: "1px solid var(--hairline)",
                 }}
               >
-                <Shuffle size={13} strokeWidth={1.6} />
+                <Shuffle size={13} strokeWidth={1.75} />
               </button>
             </div>
           );
@@ -180,7 +182,7 @@ export function Results({ generation }: Props) {
       </div>
 
       <div
-        className="mt-9 pt-6 border-t"
+        className="mt-10 pt-7 border-t"
         style={{ borderColor: "var(--hairline)" }}
       >
         <Eyebrow className="mb-3">Why these</Eyebrow>
@@ -193,16 +195,19 @@ export function Results({ generation }: Props) {
         </div>
       </div>
 
-      <div className="mt-10 surface p-5">
+      <div
+        className="mt-10 surface p-5"
+        style={{ boxShadow: "var(--shadow-e1)" }}
+      >
         <Eyebrow className="mb-3">Refine all three</Eyebrow>
         <div className="flex items-center gap-3">
-          <Sparkles size={15} strokeWidth={1.6} style={{ color: "var(--coral)" }} />
+          <Sparkles size={15} strokeWidth={1.75} style={{ color: "var(--solar)" }} />
           <input
             value={refinePrompt}
             onChange={(e) => setRefinePrompt(e.target.value)}
             placeholder="Tighten the headline, push more coral…"
             className="flex-1 bg-transparent outline-none text-[14px]"
-            style={{ color: "var(--fg-1)", fontWeight: 300 }}
+            style={{ color: "var(--ink)", fontWeight: 300 }}
           />
           <Button
             variant="outline"

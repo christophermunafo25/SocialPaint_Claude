@@ -5,8 +5,7 @@ import { cn } from "@/lib/cn";
 import { complianceBand, complianceColor } from "@/lib/cn";
 
 /**
- * Pill compliance badge — DS pill radius (999px), Fragment Mono label, sentence-case band.
- * 90+ uses success-on-mint, 75–89 uses warm-on-amber, <75 uses danger-on-coral.
+ * DS pill compliance badge — Fragment Mono label, sentence-case band.
  */
 export function ComplianceBadge({
   score,
@@ -43,7 +42,7 @@ export function ComplianceBadge({
 }
 
 /**
- * DS chip — pill 999px radius, Stack Sans 13px, tonal pastels.
+ * DS chip — pill 999px radius, tonal pastels on light surfaces.
  */
 export function Chip({
   children,
@@ -51,50 +50,55 @@ export function Chip({
   className,
 }: {
   children: React.ReactNode;
-  tone?: "neutral" | "coral" | "mint" | "sand" | "orchid" | "peach" | "sky";
+  tone?: "neutral" | "coral" | "mint" | "sand" | "orchid" | "peach" | "sky" | "solar";
   className?: string;
 }) {
   const toneStyle: Record<NonNullable<typeof tone>, React.CSSProperties> = {
     neutral: {
-      background: "rgba(247,246,245,0.06)",
-      color: "rgba(247,246,245,0.78)",
-      borderColor: "var(--hairline)",
+      background: "rgba(35,31,35,0.06)",
+      color: "var(--ink)",
+      borderColor: "transparent",
     },
     coral: {
-      background: "rgba(237,116,114,0.14)",
-      color: "#f5a7a4",
-      borderColor: "rgba(237,116,114,0.20)",
+      background: "rgba(237,116,114,0.16)",
+      color: "#a73d3b",
+      borderColor: "transparent",
     },
     mint: {
-      background: "rgba(204,253,207,0.10)",
-      color: "#a9e8b5",
-      borderColor: "rgba(204,253,207,0.18)",
+      background: "var(--mint)",
+      color: "var(--ink)",
+      borderColor: "transparent",
     },
     sand: {
-      background: "rgba(255,244,184,0.10)",
-      color: "#f3da8a",
-      borderColor: "rgba(255,244,184,0.22)",
+      background: "var(--sand)",
+      color: "var(--ink)",
+      borderColor: "transparent",
     },
     orchid: {
-      background: "rgba(206,191,250,0.10)",
-      color: "#c9b9f8",
-      borderColor: "rgba(206,191,250,0.22)",
+      background: "var(--orchid)",
+      color: "var(--ink)",
+      borderColor: "transparent",
     },
     peach: {
-      background: "rgba(255,225,214,0.10)",
-      color: "#f5cdbe",
-      borderColor: "rgba(255,225,214,0.22)",
+      background: "var(--peach)",
+      color: "var(--ink)",
+      borderColor: "transparent",
     },
     sky: {
-      background: "rgba(215,233,255,0.10)",
-      color: "#c4daf6",
-      borderColor: "rgba(215,233,255,0.22)",
+      background: "var(--sky)",
+      color: "var(--ink)",
+      borderColor: "transparent",
+    },
+    solar: {
+      background: "rgba(237,90,42,0.10)",
+      color: "var(--solar)",
+      borderColor: "transparent",
     },
   };
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 h-7 px-3 rounded-full border text-[12.5px] font-normal",
+        "inline-flex items-center gap-1.5 h-6.5 px-2.5 rounded-full border text-[12px] py-[3px]",
         className
       )}
       style={{ ...toneStyle[tone], fontWeight: 400 }}
@@ -105,8 +109,7 @@ export function Chip({
 }
 
 /**
- * Eyebrow label — Fragment Mono uppercase, used for section meta / taxonomy.
- * Drop-in replacement for ad-hoc `mono` spans across the app.
+ * Eyebrow label — Fragment Mono uppercase. Used for taxonomy & metadata.
  */
 export function Eyebrow({
   children,
@@ -121,7 +124,7 @@ export function Eyebrow({
     <span
       className={cn("label", className)}
       style={{
-        color: tone === "muted" ? "rgba(247,246,245,0.32)" : "rgba(247,246,245,0.48)",
+        color: tone === "muted" ? "var(--fg-4)" : "var(--fg-3)",
       }}
     >
       {children}

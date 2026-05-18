@@ -154,30 +154,30 @@ export function Detail({
   };
 
   return (
-    <div className="min-h-screen px-10 py-7">
-      <div className="max-w-[1320px] mx-auto flex items-center gap-3 mb-6">
+    <div className="min-h-[calc(100vh-56px)] px-8 py-7" style={{ background: "var(--linen)" }}>
+      <div className="max-w-[1340px] mx-auto flex items-center gap-3 mb-6">
         <button
           onClick={() => router.push(`/generate/${generation.id}`)}
           className="h-9 w-9 rounded-lg inline-flex items-center justify-center transition-colors"
-          style={{ color: "var(--fg-3)" }}
+          style={{ color: "var(--fg-2)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(247,246,245,0.05)";
-            e.currentTarget.style.color = "var(--fg-1)";
+            e.currentTarget.style.background = "rgba(35,31,35,0.05)";
+            e.currentTarget.style.color = "var(--ink)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--fg-3)";
+            e.currentTarget.style.color = "var(--fg-2)";
           }}
           aria-label="Back to results"
         >
-          <ArrowLeft size={16} strokeWidth={1.6} />
+          <ArrowLeft size={16} strokeWidth={1.75} />
         </button>
         <Eyebrow>
           Option {design.letter} · {compositionLabel(design.composition)}
         </Eyebrow>
         <div className="ml-auto flex items-center gap-2">
-          <Chip tone="mint">{platform.label}</Chip>
-          <Chip>
+          <Chip tone="solar">{platform.label}</Chip>
+          <Chip tone="neutral">
             {platform.width} × {platform.height}
           </Chip>
           <Link
@@ -185,31 +185,21 @@ export function Detail({
             className="text-[12.5px] px-3 h-8 inline-flex items-center rounded-lg transition-colors"
             style={{
               color: "var(--fg-2)",
-              border: "1px solid var(--hairline)",
+              border: "1px solid var(--hairline-strong)",
+              background: "var(--lift)",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(247,246,245,0.04)";
-              e.currentTarget.style.color = "var(--fg-1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "var(--fg-2)";
-            }}
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--ink)")}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--hairline-strong)")}
           >
             All options
           </Link>
         </div>
       </div>
 
-      <div className="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-        <div className="surface p-5">
+      <div className="max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+        <div className="surface p-5" style={{ boxShadow: "var(--shadow-e2)" }}>
           <div className="relative flex justify-center">
-            <div
-              style={{
-                maxWidth: platform.surfaceMax.w,
-                width: "100%",
-              }}
-            >
+            <div style={{ maxWidth: platform.surfaceMax.w, width: "100%" }}>
               <DesignPreview
                 design={design}
                 size="hero"
@@ -220,10 +210,10 @@ export function Detail({
               {refining && (
                 <div
                   className="absolute inset-0 rounded-[20px] flex items-center justify-center backdrop-blur-sm"
-                  style={{ background: "rgba(14,12,14,0.45)" }}
+                  style={{ background: "rgba(247,246,245,0.65)" }}
                 >
-                  <div className="flex items-center gap-2.5 text-[13.5px]" style={{ color: "var(--fg-1)" }}>
-                    <Loader2 size={16} className="animate-spin" style={{ color: "var(--coral)" }} />
+                  <div className="flex items-center gap-2.5 text-[13.5px]" style={{ color: "var(--ink)" }}>
+                    <Loader2 size={16} className="animate-spin" style={{ color: "var(--solar)" }} />
                     Working…
                   </div>
                 </div>
@@ -231,7 +221,6 @@ export function Detail({
             </div>
           </div>
 
-          {/* Carousel slide selector */}
           {isCarousel && (
             <div className="mt-5 flex items-center justify-center gap-2">
               <button
@@ -239,12 +228,12 @@ export function Detail({
                 disabled={slideIndex === 1}
                 className="h-8 w-8 rounded-lg inline-flex items-center justify-center disabled:opacity-30"
                 style={{
-                  background: "rgba(247,246,245,0.06)",
-                  color: "var(--fg-1)",
+                  background: "var(--paper)",
+                  color: "var(--ink)",
                   border: "1px solid var(--hairline)",
                 }}
               >
-                <ChevronLeft size={14} strokeWidth={1.6} />
+                <ChevronLeft size={14} strokeWidth={1.75} />
               </button>
               {Array.from({ length: slideTotal }).map((_, i) => {
                 const n = i + 1;
@@ -255,10 +244,9 @@ export function Detail({
                     onClick={() => setSlideIndex(n)}
                     className="h-8 px-3 rounded-lg text-[12px] transition-colors"
                     style={{
-                      color: active ? "var(--canvas)" : "var(--fg-2)",
-                      background: active ? "var(--paper)" : "rgba(247,246,245,0.04)",
+                      color: active ? "white" : "var(--fg-2)",
+                      background: active ? "var(--ink)" : "var(--paper)",
                       border: active ? "none" : "1px solid var(--hairline)",
-                      fontWeight: 400,
                       fontFamily: "var(--font-mono)",
                       letterSpacing: "0.05em",
                     }}
@@ -272,38 +260,46 @@ export function Detail({
                 disabled={slideIndex === slideTotal}
                 className="h-8 w-8 rounded-lg inline-flex items-center justify-center disabled:opacity-30"
                 style={{
-                  background: "rgba(247,246,245,0.06)",
-                  color: "var(--fg-1)",
+                  background: "var(--paper)",
+                  color: "var(--ink)",
                   border: "1px solid var(--hairline)",
                 }}
               >
-                <ChevronRight size={14} strokeWidth={1.6} />
+                <ChevronRight size={14} strokeWidth={1.75} />
               </button>
             </div>
           )}
 
           <div className="mt-5 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <button className="h-8 w-8 rounded-lg inline-flex items-center justify-center" style={{ color: "var(--fg-3)" }}>
-                <ZoomOut size={14} strokeWidth={1.6} />
+              <button
+                className="h-8 w-8 rounded-lg inline-flex items-center justify-center transition-colors"
+                style={{ color: "var(--fg-2)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--paper)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              >
+                <ZoomOut size={14} strokeWidth={1.75} />
               </button>
               <span className="label">100%</span>
-              <button className="h-8 w-8 rounded-lg inline-flex items-center justify-center" style={{ color: "var(--fg-3)" }}>
-                <ZoomIn size={14} strokeWidth={1.6} />
+              <button
+                className="h-8 w-8 rounded-lg inline-flex items-center justify-center transition-colors"
+                style={{ color: "var(--fg-2)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--paper)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              >
+                <ZoomIn size={14} strokeWidth={1.75} />
               </button>
             </div>
             <Button variant="ghost" size="sm" onClick={swapComposition} disabled={refining}>
-              <Shuffle size={13} strokeWidth={1.6} />
+              <Shuffle size={13} strokeWidth={1.75} />
               Swap layout
             </Button>
-            <div className="label">
-              {design.exported ? "Exported · ready to ship" : "Draft"}
-            </div>
+            <div className="label">{design.exported ? "Exported · ready to ship" : "Draft"}</div>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="surface p-5">
+          <div className="surface p-5" style={{ boxShadow: "var(--shadow-e1)" }}>
             <Eyebrow className="mb-4">Brand compliance</Eyebrow>
             <div className="flex items-baseline gap-3">
               <div
@@ -311,7 +307,7 @@ export function Detail({
                 style={{
                   color: complianceColor(design.complianceScore).fg,
                   fontFamily: "var(--font-display)",
-                  fontWeight: 400,
+                  fontWeight: 500,
                   letterSpacing: "-2px",
                   lineHeight: 1,
                 }}
@@ -326,14 +322,11 @@ export function Detail({
                 const { fg } = complianceColor(v);
                 return (
                   <div key={key} className="flex items-center gap-3">
-                    <span
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ background: fg }}
-                    />
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: fg }} />
                     <span className="text-[13px] flex-1" style={{ color: "var(--fg-2)" }}>
                       {label}
                     </span>
-                    <span className="tabular-nums text-[13px]" style={{ color: "var(--fg-1)" }}>
+                    <span className="tabular-nums text-[13px]" style={{ color: "var(--ink)" }}>
                       {v}
                     </span>
                   </div>
@@ -342,7 +335,7 @@ export function Detail({
             </div>
           </div>
 
-          <div className="surface p-5">
+          <div className="surface p-5" style={{ boxShadow: "var(--shadow-e1)" }}>
             <Eyebrow className="mb-3">Applied StyleDNA rules</Eyebrow>
             <div className="flex flex-wrap gap-2">
               {design.appliedRules.map((r) => (
@@ -353,9 +346,15 @@ export function Detail({
             </div>
           </div>
 
-          <div className="surface p-5">
+          <div className="surface p-5" style={{ boxShadow: "var(--shadow-e1)" }}>
             <Eyebrow className="mb-3">Refine</Eyebrow>
-            <div className="input-shell p-3.5">
+            <div
+              className="rounded-xl p-3.5"
+              style={{
+                background: "var(--paper)",
+                border: "1px solid var(--hairline)",
+              }}
+            >
               <textarea
                 value={refinePrompt}
                 onChange={(e) => setRefinePrompt(e.target.value)}
@@ -365,7 +364,7 @@ export function Detail({
                 placeholder="Tighten the headline, push more coral…"
                 rows={3}
                 className="bg-transparent w-full outline-none resize-none text-[14px]"
-                style={{ color: "var(--fg-1)", fontWeight: 300 }}
+                style={{ color: "var(--ink)", fontWeight: 300 }}
               />
               <div className="flex items-center justify-between mt-2">
                 <span className="label-sm">⌘↩ to apply</span>
@@ -375,7 +374,7 @@ export function Detail({
                   onClick={refine}
                   disabled={refining || refinePrompt.trim().length < 3}
                 >
-                  <Sparkles size={12} strokeWidth={1.6} />
+                  <Sparkles size={12} strokeWidth={1.75} />
                   {refining ? "Refining…" : "Refine"}
                 </Button>
               </div>
@@ -384,7 +383,7 @@ export function Detail({
 
           <div className="flex items-center gap-2">
             <Button variant="outline" size="lg" className="flex-1" onClick={handleSave}>
-              <Save size={14} strokeWidth={1.6} />
+              <Save size={14} strokeWidth={1.75} />
               {isSaved ? "Saved" : "Save"}
             </Button>
             <div className="relative flex-1">
@@ -394,7 +393,7 @@ export function Detail({
                 className="w-full"
                 onClick={() => setExportOpen((v) => !v)}
               >
-                <Download size={14} strokeWidth={1.6} />
+                <Download size={14} strokeWidth={1.75} />
                 Export
                 <ChevronDown size={13} className="opacity-60" />
               </Button>
@@ -406,21 +405,21 @@ export function Detail({
                     aria-hidden
                   />
                   <div
-                    className="absolute right-0 top-full mt-2 z-40 min-w-[220px] rounded-xl py-1.5"
+                    className="absolute right-0 top-full mt-2 z-40 min-w-[240px] rounded-xl py-1.5"
                     style={{
-                      background: "var(--card)",
+                      background: "var(--lift)",
                       border: "1px solid var(--hairline)",
-                      boxShadow: "var(--shadow-dropdown)",
+                      boxShadow: "var(--shadow-e3)",
                     }}
                   >
                     {(["PNG", "PDF", "Figma"] as const).map((f) => (
                       <button
                         key={f}
                         onClick={() => handleExport(f)}
-                        className="w-full text-left px-3.5 py-2 text-[13px] transition-colors flex flex-col gap-0.5"
-                        style={{ color: "var(--fg-1)" }}
+                        className="w-full text-left px-3.5 py-2.5 text-[13px] transition-colors flex flex-col gap-0.5"
+                        style={{ color: "var(--ink)" }}
                         onMouseEnter={(e) =>
-                          (e.currentTarget.style.background = "rgba(247,246,245,0.05)")
+                          (e.currentTarget.style.background = "var(--paper)")
                         }
                         onMouseLeave={(e) =>
                           (e.currentTarget.style.background = "transparent")

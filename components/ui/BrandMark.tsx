@@ -27,19 +27,24 @@ export function SocialPaintMark({
 }
 
 /**
- * Wordmark for the sidebar / nav.
+ * Wordmark for the sidebar / nav. Dark on light surfaces.
  */
 export function SocialPaintWordmark({
   height = 22,
+  variant = "dark",
   className,
 }: {
   height?: number;
+  variant?: "dark" | "white";
   className?: string;
 }) {
-  // The wordmark-white file is sized for dark backgrounds.
+  const src =
+    variant === "white"
+      ? "/assets/logo-socialpaint-wordmark-white.png"
+      : "/assets/logo-socialpaint-wordmark.png";
   return (
     <Image
-      src="/assets/logo-socialpaint-wordmark-white.png"
+      src={src}
       alt="SocialPaint"
       width={height * 6}
       height={height}
