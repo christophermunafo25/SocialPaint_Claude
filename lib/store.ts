@@ -20,12 +20,14 @@ import type {
   AssetIngestion,
   Connector,
   DesignGeneration,
+  DesignType,
   GeneratedDesign,
   HistoryItem,
   Role,
   StyleDNARule,
   User,
 } from "./types";
+import type { Palette } from "./compositions";
 import { shortId } from "./cn";
 
 interface Toast {
@@ -36,12 +38,43 @@ interface Toast {
 
 type RoleByUser = Record<string, Role>;
 
+export interface GenerationPrefs {
+  defaultPlatform: DesignType;
+  defaultPalette: Palette | "auto";
+  defaultMood: "calm" | "warm" | "bold";
+  minScoreForExport: number;
+  optionsPerGeneration: 3 | 4 | 6;
+  preferStrongRules: boolean;
+}
+
+export interface NotificationPrefs {
+  notifyOnLowCompliance: boolean;
+  lowComplianceThreshold: number;
+  notifyOnIngest: boolean;
+  notifyOnRuleEdit: boolean;
+  weeklyDigest: boolean;
+}
+
+export interface BrandPrefs {
+  accentColor: string;
+  secondaryAccent: string;
+  voiceTone: "calm" | "warm" | "playful" | "bold";
+  voiceRules: string[];
+  defaultPalette: Palette;
+  signaturePunctuation: "period" | "em-dash" | "comma";
+}
+
 interface AppState {
   // Identity
   workspace: typeof WORKSPACE;
   brand: typeof BRAND;
   currentUserId: string;
-  rolesByUser: RoleByUser; // overrides for prototype
+  rolesByUser: RoleByUser;
+
+  // Workspace prefs
+  generationPrefs: GenerationPrefs;
+  notificationPrefs: NotificationPrefs;
+  brandPrefs: BrandPrefs;
 
   // Data
   rules: StyleDNARule[];
@@ -58,6 +91,9 @@ interface AppState {
   // Mutations
   setRole: (userId: string, role: Role) => void;
   setCurrentUser: (userId: string) => void;
+  setGenerationPrefs: (patch: Partial<GenerationPrefs>) => void;
+  setNotificationPrefs: (patch: Partial<NotificationPrefs>) => void;
+  setBrandPrefs: (patch: Partial<BrandPrefs>) => void;
 
   setGeneration: (gen: DesignGeneration) => void;
   updateDesign: (designId: string, patch: Partial<GeneratedDesign>) => void;
@@ -105,6 +141,35 @@ export const useApp = create<AppState>()(
         u_ren: "Owner",
       },
 
+      generationPrefs: {
+        defaultPlatform: "LinkedIn 1:1",
+        defaultPalette: "auto",
+        defaultMood: "calm",
+        minScoreForExport: 75,
+        optionsPerGeneration: 3,
+        preferStrongRules: true,
+      },
+      notificationPrefs: {
+        notifyOnLowCompliance: true,
+        lowComplianceThreshold: 75,
+        notifyOnIngest: true,
+        notifyOnRuleEdit: false,
+        weeklyDigest: true,
+      },
+      brandPrefs: {
+        accentColor: "#ED7472",
+        secondaryAccent: "#F5C044",
+        voiceTone: "calm",
+        voiceRules: [
+          "Periods, not exclamation marks.",
+          "Sentence case for everything except mono labels.",
+          "Numerals over spelled-out numbers from 10 onward.",
+          "Active voice. Second person.",
+        ],
+        defaultPalette: "ink",
+        signaturePunctuation: "period",
+      },
+
       rules: SEED_RULES,
       history: SEED_HISTORY,
       activity: SEED_ACTIVITY,
@@ -118,6 +183,12 @@ export const useApp = create<AppState>()(
       setRole: (userId, role) =>
         set((s) => ({ rolesByUser: { ...s.rolesByUser, [userId]: role } })),
       setCurrentUser: (userId) => set({ currentUserId: userId }),
+      setGenerationPrefs: (patch) =>
+        set((s) => ({ generationPrefs: { ...s.generationPrefs, ...patch } })),
+      setNotificationPrefs: (patch) =>
+        set((s) => ({ notificationPrefs: { ...s.notificationPrefs, ...patch } })),
+      setBrandPrefs: (patch) =>
+        set((s) => ({ brandPrefs: { ...s.brandPrefs, ...patch } })),
 
       setGeneration: (gen) =>
         set((s) => ({ generations: { ...s.generations, [gen.id]: gen } })),
@@ -275,8 +346,11 @@ export const useApp = create<AppState>()(
         rules: s.rules,
         connectors: s.connectors,
         activity: s.activity.slice(0, 30),
+        generationPrefs: s.generationPrefs,
+        notificationPrefs: s.notificationPrefs,
+        brandPrefs: s.brandPrefs,
       }),
-      version: 1,
+      version: 2,
     }
   )
 );

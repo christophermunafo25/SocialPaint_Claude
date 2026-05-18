@@ -1,34 +1,53 @@
-// Simulated generation — produces 3 options after ~3.5s.
+// Simulated generation — produces three structurally distinct options after ~3.5s.
 import type { DesignGeneration, GeneratedDesign, DesignType } from "./types";
-import { DEMO_OPTIONS, DEMO_PROMPT, REFINE_HEADLINE_VARIANTS } from "./mock-data";
+import { DEMO_PROMPT } from "./mock-data";
 import { shortId } from "./cn";
+import { pickCompositions, composeCopy, scoreForComposition, type CompositionSpec } from "./compositions";
 
-const VARIANT_BG = [
-  "radial-gradient(circle at 70% 55%, rgba(237,116,114,0.55), rgba(237,116,114,0) 55%), #0A0A0A",
-  "radial-gradient(circle at 40% 65%, rgba(237,116,114,0.42), rgba(237,116,114,0) 60%), #0A0A0A",
-  "radial-gradient(circle at 50% 40%, rgba(237,116,114,0.30), rgba(237,116,114,0) 65%), #0A0A0A",
-];
+const RULE_LIBRARY: Record<string, string[]> = {
+  announcement: ["Coral as accent", "Left-aligned hero", "Short declaratives", "No bold headlines"],
+  "pull-quote": ["Quote marks as motif", "Paper-cream surface", "Short declaratives"],
+  "stat-callout": ["Numerals over words", "Coral as accent", "8px vertical rhythm"],
+  "editorial-cover": ["Fragment Mono eyebrows", "Short declaratives", "Asymmetric hero"],
+  "paper-card": ["Paper-cream surface", "Hairline borders", "Sentence-case headlines"],
+  "warm-mesh": ["Warm mesh background", "White display type"],
+  "event-promo": ["Date forward", "Coral as accent", "CTA pill"],
+  "minimal-quote": ["Short declaratives", "Coral as accent"],
+  "banner-strip": ["Warm spectrum gradient", "Single line of copy"],
+  "carousel-slide": ["Numbered slide eyebrow", "Stack Sans Headline 400"],
+};
 
-// Returns a function-shaped headline derived from the prompt, with subhead.
-function deriveHeadlines(prompt: string): { headline: string; subhead?: string }[] {
-  const p = prompt.toLowerCase();
-  // If the prompt closely matches the demo prompt, return the canonical options.
-  if (p.includes("acme") || p.includes("tuesday")) {
-    return DEMO_OPTIONS.map((o) => ({ headline: o.headline, subhead: o.subhead }));
-  }
-  // Otherwise, derive three terse declaratives from prompt fragments.
-  const trimmed = prompt.replace(/[.!?]+$/, "").trim();
-  const lead = trimmed.split(/[,;:—-]/)[0]?.trim() || "Something new.";
-  const short = lead.length > 38 ? lead.slice(0, 36).trim() + "…" : lead + ".";
-  return [
-    { headline: short, subhead: "On-brand. By default." },
-    { headline: capitalize(trimmed.split(" ").slice(0, 5).join(" ")) + ".", subhead: "Now in coral." },
-    { headline: "Here it is.", subhead: short },
-  ];
-}
+function buildDesign(
+  generationId: string,
+  prompt: string,
+  designType: DesignType,
+  spec: CompositionSpec,
+  letter: "A" | "B" | "C"
+): GeneratedDesign {
+  const copy = composeCopy(prompt, spec);
+  const { score, breakdown } = scoreForComposition(spec);
+  const rules = RULE_LIBRARY[spec.key] ?? ["Coral as accent", "Short declaratives"];
 
-function capitalize(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  return {
+    id: shortId("d"),
+    generationId,
+    letter,
+    headline: copy.headline,
+    subhead: copy.subhead,
+    eyebrow: copy.eyebrow,
+    detail: copy.detail,
+    statValue: copy.statValue,
+    statSuffix: copy.statSuffix,
+    dateLine: copy.dateLine,
+    ctaLabel: copy.ctaLabel,
+    composition: spec.key,
+    palette: spec.palette,
+    designType,
+    complianceScore: score,
+    complianceBreakdown: breakdown,
+    appliedRules: rules,
+    status: "draft",
+  };
 }
 
 export function simulateGeneration(
@@ -37,31 +56,15 @@ export function simulateGeneration(
   userId: string
 ): Promise<DesignGeneration> {
   const generationId = shortId("gen");
-  const headlines = deriveHeadlines(prompt);
-  const scores = [94, 89, 78];
-  const breakdowns = [
-    { color: 100, typography: 92, layout: 90, imagery: 88, voice: 96 },
-    { color: 95, typography: 90, layout: 85, imagery: 82, voice: 92 },
-    { color: 80, typography: 70, layout: 75, imagery: 78, voice: 88 },
-  ];
-  const ruleSets = [
-    ["Coral as accent", "No bold headlines", "Left-aligned hero", "Short declaratives"],
-    ["Coral as accent", "Left-aligned hero", "Short declaratives"],
-    ["Coral as accent", "Short declaratives"],
-  ];
+  const specs = pickCompositions(prompt || DEMO_PROMPT, designType);
 
-  const options: GeneratedDesign[] = headlines.map((h, i) => ({
-    id: shortId("d"),
-    generationId,
-    letter: (["A", "B", "C"] as const)[i],
-    headline: h.headline,
-    subhead: h.subhead,
-    previewBg: VARIANT_BG[i],
-    complianceScore: scores[i],
-    complianceBreakdown: breakdowns[i],
-    appliedRules: ruleSets[i],
-    status: "draft",
-  }));
+  // Sort by base score shift so Option A is the strongest.
+  const sorted = [...specs].sort((a, b) => b.baseScoreShift - a.baseScoreShift);
+  const letters: ("A" | "B" | "C")[] = ["A", "B", "C"];
+
+  const options: GeneratedDesign[] = sorted.map((spec, i) =>
+    buildDesign(generationId, prompt || DEMO_PROMPT, designType, spec, letters[i])
+  );
 
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -78,14 +81,38 @@ export function simulateGeneration(
   });
 }
 
-// Refine: returns a v2 design with +2 score and a swapped headline.
+/** Regenerate a single variant — picks a fresh composition different from the existing one. */
+export function simulateRegenerateOne(
+  prompt: string,
+  designType: DesignType,
+  generationId: string,
+  excludeComposition: string,
+  letter: "A" | "B" | "C"
+): Promise<GeneratedDesign> {
+  // Pick from the full pool of compositions and try to avoid duplicates.
+  const specs = pickCompositions(prompt, designType);
+  const fresh = specs.find((s) => s.key !== excludeComposition) ?? specs[0];
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(buildDesign(generationId, prompt, designType, fresh, letter));
+    }, 1800);
+  });
+}
+
+// Refine: tighten copy + bump score by ~2.
 export function simulateRefine(
   design: GeneratedDesign,
-  refinePrompt: string
+  _refinePrompt: string
 ): Promise<GeneratedDesign> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const variant = REFINE_HEADLINE_VARIANTS[Math.floor(Math.random() * REFINE_HEADLINE_VARIANTS.length)];
+      const refinedCopy = composeCopy(design.headline, {
+        key: design.composition,
+        palette: design.palette,
+        baseScoreShift: 1,
+        tone: "declarative",
+      });
       const nextScore = Math.min(100, design.complianceScore + 2);
       const bumpedBreakdown = {
         color: Math.min(100, design.complianceBreakdown.color + 1),
@@ -94,17 +121,14 @@ export function simulateRefine(
         imagery: design.complianceBreakdown.imagery,
         voice: Math.min(100, design.complianceBreakdown.voice + 2),
       };
-      // Slightly different halo position to indicate the swap.
-      const refinedBg =
-        "radial-gradient(circle at 72% 50%, rgba(237,116,114,0.62), rgba(237,116,114,0) 55%), #0A0A0A";
       resolve({
         ...design,
-        headline: variant.headline,
-        subhead: variant.subhead,
-        previewBg: refinedBg,
+        headline: refinedCopy.headline,
+        subhead: refinedCopy.subhead,
+        eyebrow: refinedCopy.eyebrow ?? design.eyebrow,
         complianceScore: nextScore,
         complianceBreakdown: bumpedBreakdown,
       });
-    }, 2000);
+    }, 1800);
   });
 }

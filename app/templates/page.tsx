@@ -5,9 +5,41 @@ import Link from "next/link";
 import { LayoutTemplate } from "lucide-react";
 import { TEMPLATES } from "@/lib/mock-data";
 import { Chip, Eyebrow } from "@/components/ui/Badge";
+import { DesignPreview } from "@/components/generate/DesignPreview";
+import { composeCopy } from "@/lib/compositions";
+import type { GeneratedDesign, Template } from "@/lib/types";
 import { cn } from "@/lib/cn";
 
 const FILTERS = ["All", "LinkedIn", "Instagram", "Email", "Carousel"] as const;
+
+function templateToDesign(t: Template): GeneratedDesign {
+  const copy = composeCopy(t.prompt, {
+    key: t.composition,
+    palette: t.palette,
+    baseScoreShift: 1,
+    tone: "declarative",
+  });
+  return {
+    id: `tpl_${t.id}`,
+    generationId: `tpl_${t.id}`,
+    letter: "A",
+    eyebrow: copy.eyebrow,
+    headline: copy.headline,
+    subhead: copy.subhead,
+    detail: copy.detail,
+    statValue: copy.statValue,
+    statSuffix: copy.statSuffix,
+    dateLine: copy.dateLine,
+    ctaLabel: copy.ctaLabel,
+    composition: t.composition,
+    palette: t.palette,
+    designType: t.designType,
+    complianceScore: 94,
+    complianceBreakdown: { color: 95, typography: 95, layout: 92, imagery: 88, voice: 96 },
+    appliedRules: [],
+    status: "draft",
+  };
+}
 
 export default function TemplatesPage() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
@@ -20,25 +52,24 @@ export default function TemplatesPage() {
       <div className="flex items-center gap-2 mb-3">
         <Eyebrow>Brand templates · Pre-built starts</Eyebrow>
       </div>
-      <div className="flex items-end justify-between gap-6 mb-7">
-        <div className="flex items-start gap-4">
-          <div
-            className="icon-tile"
-            style={{
-              width: 48,
-              height: 48,
-              background: "var(--peach)",
-              color: "#231f23",
-            }}
-          >
-            <LayoutTemplate size={20} strokeWidth={1.5} />
-          </div>
-          <div>
-            <h1 className="h1">Templates</h1>
-            <p className="body mt-1.5">
-              Click a tile to drop the prompt into Generate.
-            </p>
-          </div>
+      <div className="flex items-end gap-4 mb-7">
+        <div
+          className="icon-tile"
+          style={{
+            width: 48,
+            height: 48,
+            background: "var(--peach)",
+            color: "#231f23",
+          }}
+        >
+          <LayoutTemplate size={20} strokeWidth={1.5} />
+        </div>
+        <div>
+          <h1 className="h1">Templates</h1>
+          <p className="body mt-1.5">
+            Pre-built layouts. Click a tile to open Generate with the prompt and
+            composition pre-selected.
+          </p>
         </div>
       </div>
 
@@ -51,9 +82,7 @@ export default function TemplatesPage() {
             style={{
               color: filter === f ? "var(--canvas)" : "var(--fg-2)",
               background:
-                filter === f
-                  ? "var(--paper)"
-                  : "rgba(247,246,245,0.04)",
+                filter === f ? "var(--paper)" : "rgba(247,246,245,0.04)",
               fontWeight: 400,
             }}
           >
@@ -64,47 +93,32 @@ export default function TemplatesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filtered.map((t) => (
-          <Link
-            key={t.id}
-            href={`/generate?prompt=${encodeURIComponent(t.prompt)}&type=${encodeURIComponent(t.designType)}`}
-            className="surface surface-hover p-4 block group"
-          >
-            <div
-              className="aspect-square rounded-2xl flex items-end p-5 relative overflow-hidden"
-              style={{
-                background: t.thumbBg,
-                border: "1px solid rgba(247,246,245,0.06)",
-              }}
+        {filtered.map((t) => {
+          const design = templateToDesign(t);
+          return (
+            <Link
+              key={t.id}
+              href={`/generate?prompt=${encodeURIComponent(t.prompt)}&type=${encodeURIComponent(t.designType)}`}
+              className="surface surface-hover p-4 block group"
             >
-              <div
-                className="text-[24px] text-white"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 400,
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                {t.thumbAccent}.
+              <DesignPreview design={design} />
+              <div className="mt-4 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div
+                    className="text-[14px] truncate"
+                    style={{ color: "var(--fg-1)", fontWeight: 400 }}
+                  >
+                    {t.name}
+                  </div>
+                  <div className="label-sm truncate mt-0.5">{t.description}</div>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <Chip tone="mint">{t.designType}</Chip>
+                </div>
               </div>
-            </div>
-            <div className="mt-4 flex items-center justify-between">
-              <div
-                className="text-[14px]"
-                style={{ color: "var(--fg-1)", fontWeight: 400 }}
-              >
-                {t.name}
-              </div>
-              <Chip tone="mint">{t.designType}</Chip>
-            </div>
-            <p
-              className="mt-2 text-[12.5px] leading-snug line-clamp-2"
-              style={{ color: "var(--fg-3)", fontWeight: 300 }}
-            >
-              {t.prompt}
-            </p>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

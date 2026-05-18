@@ -219,29 +219,45 @@ export default function InsightsPage() {
         <div className="surface p-5">
           <Eyebrow className="mb-4">Most-used templates</Eyebrow>
           <div className="flex flex-col gap-3">
-            {TEMPLATES.slice(0, 5).map((t, i) => (
-              <div key={t.id} className="flex items-center gap-3">
-                <div
-                  className="h-8 w-8 rounded-lg flex-shrink-0"
-                  style={{
-                    background: t.thumbBg,
-                    border: "1px solid rgba(247,246,245,0.06)",
-                  }}
-                />
-                <span
-                  className="text-[13.5px] flex-1 truncate"
-                  style={{ color: "var(--fg-1)" }}
-                >
-                  {t.name}
-                </span>
-                <span
-                  className="tabular-nums text-[13px]"
-                  style={{ color: "var(--fg-2)" }}
-                >
-                  {[58, 41, 33, 22, 12][i]}
-                </span>
-              </div>
-            ))}
+            {TEMPLATES.slice(0, 5).map((t, i) => {
+              const pastel =
+                t.palette === "paper"
+                  ? "#f7f6f5"
+                  : t.palette === "mesh"
+                  ? "linear-gradient(135deg, #f5c044, #ed5a2a)"
+                  : t.palette === "orchid"
+                  ? "#cebffa"
+                  : t.palette === "mint"
+                  ? "#ccfdcf"
+                  : t.palette === "sand"
+                  ? "#fff4b8"
+                  : t.palette === "peach"
+                  ? "#ffe1d6"
+                  : "#1a171a";
+              return (
+                <div key={t.id} className="flex items-center gap-3">
+                  <div
+                    className="h-8 w-8 rounded-lg flex-shrink-0"
+                    style={{
+                      background: pastel,
+                      border: "1px solid rgba(247,246,245,0.06)",
+                    }}
+                  />
+                  <span
+                    className="text-[13.5px] flex-1 truncate"
+                    style={{ color: "var(--fg-1)" }}
+                  >
+                    {t.name}
+                  </span>
+                  <span
+                    className="tabular-nums text-[13px]"
+                    style={{ color: "var(--fg-2)" }}
+                  >
+                    {[58, 41, 33, 22, 12][i]}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

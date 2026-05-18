@@ -70,10 +70,21 @@ export interface GeneratedDesign {
   letter: "A" | "B" | "C";
   headline: string;
   subhead?: string;
-  previewBg: string; // CSS background
+  eyebrow?: string;
+  detail?: string;
+  statValue?: string;
+  statSuffix?: string;
+  dateLine?: string;
+  ctaLabel?: string;
+  composition: import("./compositions").CompositionKey;
+  palette: import("./compositions").Palette;
+  designType: DesignType;
+  /** Optional override for the simple "halo on dark" preview if a composition is missing.
+   *  New compositions render themselves; this is just a fallback. */
+  previewBg?: string;
   complianceScore: number;
   complianceBreakdown: ComplianceBreakdown;
-  appliedRules: string[]; // rule titles
+  appliedRules: string[];
   status: "draft" | "saved" | "flagged";
   exported?: boolean;
 }
@@ -150,8 +161,9 @@ export interface Template {
   category: "LinkedIn" | "Instagram" | "Email" | "Carousel";
   designType: DesignType;
   prompt: string;
-  thumbBg: string;
-  thumbAccent: string;
+  composition: import("./compositions").CompositionKey;
+  palette: import("./compositions").Palette;
+  description: string;
 }
 
 export interface Connector {
