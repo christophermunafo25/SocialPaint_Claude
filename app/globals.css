@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* ─── Design tokens · §8 UI style guide ────────────────────────────────── */
+
+@theme {
+  --color-canvas: #0a0a0a;
+  --color-sidebar: #121212;
+  --color-card: #171717;
+  --color-input: #1a1a1a;
+  --color-hover: #1c1c1c;
+  --color-line: #1f1f1f;
+  --color-line-strong: #2a2a2a;
+
+  --color-coral: #ed7472;
+  --color-coral-soft: rgba(237, 116, 114, 0.12);
+  --color-coral-text: #f29593;
+
+  --color-mint: #7ce3b5;
+  --color-amber: #f7c57a;
+  --color-violet: #d9a6ff;
+  --color-azure: #9fb8ff;
+
+  --color-ink-100: rgba(255, 255, 255, 0.96);
+  --color-ink-80: rgba(255, 255, 255, 0.78);
+  --color-ink-60: rgba(255, 255, 255, 0.58);
+  --color-ink-45: rgba(255, 255, 255, 0.45);
+  --color-ink-30: rgba(255, 255, 255, 0.30);
+  --color-ink-15: rgba(255, 255, 255, 0.15);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+}
+
+/* ─── Base layer ──────────────────────────────────────────────────────── */
+
+html,
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.005em;
+}
+
+* {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+::selection {
+  background: var(--color-coral-soft);
+  color: var(--color-ink-100);
+}
+
+/* ─── Utility components ──────────────────────────────────────────────── */
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-45);
+}
+
+.mono-strong {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-60);
+}
+
+.headline-display {
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
+.surface {
+  background: var(--color-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+}
+
+.surface-hover:hover {
+  background: var(--color-hover);
+}
+
+.input-shell {
+  background: var(--color-input);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+}
+
+.input-shell:focus-within {
+  border-color: rgba(237, 116, 114, 0.35);
+}
+
+.coral-halo {
+  background-image: radial-gradient(
+    circle at 70% 50%,
+    rgba(237, 116, 114, 0.42),
+    rgba(237, 116, 114, 0) 55%
+  );
+}
+
+/* Scrollbars · soft */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Pulse — used on "Live" indicators */
+@keyframes sp-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(124, 227, 181, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(124, 227, 181, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 227, 181, 0);
+  }
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-mint);
+  animation: sp-pulse 2s infinite;
+}
+
+/* Status line dim cascade */
+@keyframes sp-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: sp-fade-in 0.6s ease forwards;
+}
+
+/* Hide focus ring on mouse use, keep for keyboard. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible {
+  outline: 1px solid rgba(237, 116, 114, 0.55);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
